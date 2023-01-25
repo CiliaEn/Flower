@@ -24,6 +24,8 @@
 		74029D3F2981271000DDC42B /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 74029D3E2981271000DDC42B /* FirebaseFirestoreSwift */; };
 		74029D412981271000DDC42B /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = 74029D402981271000DDC42B /* FirebaseFunctions */; };
 		74029D432981271000DDC42B /* FirebaseFunctionsCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 74029D422981271000DDC42B /* FirebaseFunctionsCombine-Community */; };
+		74029D452981399800DDC42B /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74029D442981399800DDC42B /* Store.swift */; };
+		74029D4729813A3000DDC42B /* Stores.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74029D4629813A3000DDC42B /* Stores.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +57,8 @@
 		74029D202981245300DDC42B /* FlowerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowerUITests.swift; sourceTree = "<group>"; };
 		74029D222981245300DDC42B /* FlowerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		74029D2F2981258000DDC42B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		74029D442981399800DDC42B /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
+		74029D4629813A3000DDC42B /* Stores.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stores.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +123,8 @@
 				74029D092981245200DDC42B /* Assets.xcassets */,
 				74029D2F2981258000DDC42B /* GoogleService-Info.plist */,
 				74029D0B2981245200DDC42B /* Preview Content */,
+				74029D442981399800DDC42B /* Store.swift */,
+				74029D4629813A3000DDC42B /* Stores.swift */,
 			);
 			path = Flower;
 			sourceTree = "<group>";
@@ -293,8 +299,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				74029D452981399800DDC42B /* Store.swift in Sources */,
 				74029D082981244F00DDC42B /* ContentView.swift in Sources */,
 				74029D062981244F00DDC42B /* FlowerApp.swift in Sources */,
+				74029D4729813A3000DDC42B /* Stores.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
