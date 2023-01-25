@@ -6,23 +6,61 @@
 //
 
 import SwiftUI
+//import FirebaseFirestore
 
 //first comment
 
 struct ContentView: View {
+    
+    @StateObject var stores = Stores()
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        List ($stores.list) { $store in
+            
+            RowView(store: store)
+            
         }
-        .padding()
+        .onAppear(){
+          //  saveToFirestore("Violas blommor", 89, "1-2 dagar", "flower1")
+        }
+        
+        
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+    }
+}
+
+//func saveToFirestore (_ storeName : String, _ fee: Int, _ time : String, _ img: String) {
+//    let db = Firestore.firestore()
+//    let store = Store(name: storeName, deliveryFee: fee, deliveryTime: time, image: img)
+//
+//    do {
+//        _ = try db.collection("stores").addDocument(from: store)
+//    }
+//    catch {
+//        print("Could not save to firestore")
+//    }
+//
+//}
+
+struct RowView: View {
+    let store: Store
+    
+    var body: some View {
+        VStack{
+            Image(store.image)
+                .resizable()
+            HStack{
+                
+                Text(store.name)
+                HStack{
+                    Text("\(store.deliveryFee)kr")
+                    Text(store.deliveryTime)
+                }
+            }
+        }
     }
 }
