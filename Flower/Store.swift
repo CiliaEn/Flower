@@ -6,12 +6,12 @@
 //
 
 import Foundation
-//import FirebaseFirestoreSwift
+import FirebaseFirestoreSwift
 
-struct Store : Identifiable {
-   // @DocumentID var id : String?
+struct Store : Identifiable, Codable {
+    @DocumentID var id : String?
     
-    var id = UUID()
+   // let id = UUID()
     
     var name : String
     var deliveryFee : Int

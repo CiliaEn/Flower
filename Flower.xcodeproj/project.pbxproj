@@ -14,7 +14,6 @@
 		74029D172981245300DDC42B /* FlowerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74029D162981245300DDC42B /* FlowerTests.swift */; };
 		74029D212981245300DDC42B /* FlowerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74029D202981245300DDC42B /* FlowerUITests.swift */; };
 		74029D232981245300DDC42B /* FlowerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74029D222981245300DDC42B /* FlowerUITestsLaunchTests.swift */; };
-		74029D302981258000DDC42B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 74029D2F2981258000DDC42B /* GoogleService-Info.plist */; };
 		74029D332981271000DDC42B /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 74029D322981271000DDC42B /* FirebaseAuth */; };
 		74029D352981271000DDC42B /* FirebaseAuthCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 74029D342981271000DDC42B /* FirebaseAuthCombine-Community */; };
 		74029D372981271000DDC42B /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 74029D362981271000DDC42B /* FirebaseDatabase */; };
@@ -26,6 +25,7 @@
 		74029D432981271000DDC42B /* FirebaseFunctionsCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 74029D422981271000DDC42B /* FirebaseFunctionsCombine-Community */; };
 		74029D452981399800DDC42B /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74029D442981399800DDC42B /* Store.swift */; };
 		74029D4729813A3000DDC42B /* Stores.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74029D4629813A3000DDC42B /* Stores.swift */; };
+		74029D492981694A00DDC42B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 74029D482981694800DDC42B /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,9 +56,10 @@
 		74029D1C2981245300DDC42B /* FlowerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlowerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		74029D202981245300DDC42B /* FlowerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowerUITests.swift; sourceTree = "<group>"; };
 		74029D222981245300DDC42B /* FlowerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowerUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		74029D2F2981258000DDC42B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		74029D442981399800DDC42B /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		74029D4629813A3000DDC42B /* Stores.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stores.swift; sourceTree = "<group>"; };
+		74029D482981694800DDC42B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		74029D4A29816AC900DDC42B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,13 +119,14 @@
 		74029D042981244F00DDC42B /* Flower */ = {
 			isa = PBXGroup;
 			children = (
+				74029D4A29816AC900DDC42B /* Info.plist */,
 				74029D052981244F00DDC42B /* FlowerApp.swift */,
 				74029D072981244F00DDC42B /* ContentView.swift */,
 				74029D092981245200DDC42B /* Assets.xcassets */,
-				74029D2F2981258000DDC42B /* GoogleService-Info.plist */,
 				74029D0B2981245200DDC42B /* Preview Content */,
 				74029D442981399800DDC42B /* Store.swift */,
 				74029D4629813A3000DDC42B /* Stores.swift */,
+				74029D482981694800DDC42B /* GoogleService-Info.plist */,
 			);
 			path = Flower;
 			sourceTree = "<group>";
@@ -274,7 +276,7 @@
 			files = (
 				74029D0D2981245200DDC42B /* Preview Assets.xcassets in Resources */,
 				74029D0A2981245200DDC42B /* Assets.xcassets in Resources */,
-				74029D302981258000DDC42B /* GoogleService-Info.plist in Resources */,
+				74029D492981694A00DDC42B /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -463,7 +465,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Flower/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_FILE = Flower/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -491,7 +493,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Flower/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_FILE = Flower/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
