@@ -13,55 +13,63 @@ import FirebaseFirestore
 struct ContentView: View {
     
     @StateObject var stores = Stores()
-    @State var showingStoreSheet = false
-    @State var storeNumber = 0
-    
-    
-    
-    
+    @State private var searchText = ""
+   
     var body: some View {
         TabView{
+            NavigationStack{
             List ($stores.list) { $store in
                 
                 NavigationLink(destination: StoreView(store: store)){
                     RowView(store: store)
                 }
                 
-                
             }
-                    .tabItem {
-                        Image(systemName: "house.fill")
-                        Text("Home")
-                    }
-                    
-                Text("search view")
-                    .tabItem {
-                        Image(systemName: "magnifyingglass")
-                        Text("Search")
-                    }
-                Text("account view")
-                    .tabItem {
-                        Image(systemName: "person.fill")
-                        Text("Account")
-                    }
-                
-                
+            
             }
-            //        .sheet(isPresented: $showingStoreSheet) {
-            //            StoreSheet()
-            //        }
+            .searchable(text: $searchText)
+            .tabItem {
+                Image(systemName: "house.fill")
+                Text("Home")
+            }
+            NavigationStack {
+                        Text("Searching for \(searchText)")
+                    }
+                    .searchable(text: $searchText)
+                .tabItem {
+                    Image(systemName: "magnifyingglass")
+                    Text("Search")
+                }
+            Text("shopping cart")
+                .tabItem {
+                    Image(systemName: "bag.fill")
+                    Text("Cart")
+                }
+            Text("account view")
+                .tabItem {
+                    Image(systemName: "person.fill")
+                    Text("Account")
+                }
+            
+            
+            
+        }
+        //        .sheet(isPresented: $showingStoreSheet) {
+        //            StoreSheet()
+        //        }
         
         .onAppear(){
-//            var b1 = Bouquet(name: "Höstbukett", price: 200, image: "fall")
-//            var b2 = Bouquet(name: "Vårbukett", price: 200, image: "spring")
+//            var b1 = Bouquet(name: "Höstbukett", price: 250, image: "fall")
+//            var b2 = Bouquet(name: "Vårbukett", price: 250, image: "spring")
 //            var b3 = Bouquet(name: "Rosbukett", price: 200, image: "roses")
-//            saveToFirestore("Blombutiken", 99, "8 timmar", "flower4", [b1, b2, b3])
+//            var b4 = Bouquet(name: "Romantisk bukett", price: 200, image: "roses")
+//            var b5 = Bouquet(name: "Orange bukett", price: 200, image: "fall")
+//
+//            saveToFirestore("Blomster och annat", 69, "4-6 timmar", "flower3", [b5, b3, b2, b1, b4])
             listenToFirestore()
             
         }
     }
-                               
-                               
                                
     func saveToFirestore (_ storeName : String, _ fee: Int, _ time : String, _ img: String, _ bouquets: [Bouquet]) {
         let db = Firestore.firestore()
@@ -73,7 +81,6 @@ struct ContentView: View {
         catch {
             print("Could not save to firestore")
         }
-        
     }
     
     func listenToFirestore() {
@@ -98,13 +105,9 @@ struct ContentView: View {
                         print ("Error decoding store: \(error)")
                     }
                 }
-                
-                
             }
         }
     }
-    
-    
 }
 
 struct StoreView : View {
@@ -123,8 +126,6 @@ struct StoreView : View {
             }
         }
     }
-    
-    
 }
 
 struct ContentView_Previews: PreviewProvider {
