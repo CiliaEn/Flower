@@ -14,63 +14,61 @@ struct ContentView: View {
     
     @StateObject var stores = Stores()
     @State private var searchText = ""
-   
+    
+    var searchResults: [Store] {
+        if searchText.isEmpty {
+            return stores.list
+        } else {
+            return stores.list.filter { $0.name.contains(searchText) }
+        }
+    }
+    
     var body: some View {
         TabView{
             NavigationStack{
-            List ($stores.list) { $store in
-                
-                NavigationLink(destination: StoreView(store: store)){
-                    RowView(store: store)
+                List {
+                    ForEach(searchResults, id: \.self) { store in
+                        
+                        NavigationLink(destination: StoreView(store: store)){
+                            RowView(store: store)
+                        }
+                    }
                 }
-                
-            }
-            
             }
             .searchable(text: $searchText)
             .tabItem {
                 Image(systemName: "house.fill")
                 Text("Home")
             }
-            NavigationStack {
-                        Text("Searching for \(searchText)")
-                    }
-                    .searchable(text: $searchText)
+            
+            Text("Searching for \(searchText)")
+                .searchable(text: $searchText)
                 .tabItem {
                     Image(systemName: "magnifyingglass")
                     Text("Search")
                 }
+            
             Text("shopping cart")
                 .tabItem {
                     Image(systemName: "bag.fill")
                     Text("Cart")
                 }
+            
             Text("account view")
                 .tabItem {
                     Image(systemName: "person.fill")
                     Text("Account")
                 }
-            
-            
-            
         }
-        //        .sheet(isPresented: $showingStoreSheet) {
-        //            StoreSheet()
-        //        }
         
         .onAppear(){
-//            var b1 = Bouquet(name: "Höstbukett", price: 250, image: "fall")
-//            var b2 = Bouquet(name: "Vårbukett", price: 250, image: "spring")
-//            var b3 = Bouquet(name: "Rosbukett", price: 200, image: "roses")
-//            var b4 = Bouquet(name: "Romantisk bukett", price: 200, image: "roses")
-//            var b5 = Bouquet(name: "Orange bukett", price: 200, image: "fall")
-//
-//            saveToFirestore("Blomster och annat", 69, "4-6 timmar", "flower3", [b5, b3, b2, b1, b4])
+            
+            
             listenToFirestore()
             
         }
     }
-                               
+    
     func saveToFirestore (_ storeName : String, _ fee: Int, _ time : String, _ img: String, _ bouquets: [Bouquet]) {
         let db = Firestore.firestore()
         let store = Store(name: storeName, deliveryFee: fee, deliveryTime: time, image: img, bouquets: bouquets )
@@ -109,6 +107,8 @@ struct ContentView: View {
         }
     }
 }
+
+
 
 struct StoreView : View {
     

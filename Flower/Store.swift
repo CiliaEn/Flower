@@ -8,7 +8,10 @@
 import Foundation
 import FirebaseFirestoreSwift
 
-struct Store : Identifiable, Codable {
+struct Store : Identifiable, Codable, Hashable {
+    
+    
+    
     
     @DocumentID var id : String?
     
@@ -17,6 +20,14 @@ struct Store : Identifiable, Codable {
     var deliveryTime : String
     var image : String
     var bouquets : [Bouquet]
+    
+    static func == (lhs: Store, rhs: Store) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
     
    
     
