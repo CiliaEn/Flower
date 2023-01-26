@@ -16,6 +16,9 @@ struct ContentView: View {
     @State var showingStoreSheet = false
     @State var storeNumber = 0
     
+    
+    
+    
     var body: some View {
         TabView{
             List ($stores.list) { $store in
@@ -26,8 +29,6 @@ struct ContentView: View {
                 
                 
             }
-                
-                
                     .tabItem {
                         Image(systemName: "house.fill")
                         Text("Home")
@@ -51,16 +52,20 @@ struct ContentView: View {
             //        }
         
         .onAppear(){
-            // saveToFirestore("Blombutiken", 99, "8 timmar", "flower4")
+//            var b1 = Bouquet(name: "Höstbukett", price: 200, image: "fall")
+//            var b2 = Bouquet(name: "Vårbukett", price: 200, image: "spring")
+//            var b3 = Bouquet(name: "Rosbukett", price: 200, image: "roses")
+//            saveToFirestore("Blombutiken", 99, "8 timmar", "flower4", [b1, b2, b3])
             listenToFirestore()
+            
         }
     }
                                
                                
                                
-    func saveToFirestore (_ storeName : String, _ fee: Int, _ time : String, _ img: String) {
+    func saveToFirestore (_ storeName : String, _ fee: Int, _ time : String, _ img: String, _ bouquets: [Bouquet]) {
         let db = Firestore.firestore()
-        let store = Store(name: storeName, deliveryFee: fee, deliveryTime: time, image: img)
+        let store = Store(name: storeName, deliveryFee: fee, deliveryTime: time, image: img, bouquets: bouquets )
         
         do {
             _ = try db.collection("stores").addDocument(from: store)
@@ -107,8 +112,18 @@ struct StoreView : View {
     let store : Store
     
     var body: some View{
-        Text(store.name)
+        VStack{
+            Image(store.image)
+                .resizable()
+                .frame(width: 400, height: 240)
+            Text(store.name)
+            Text("\(store.deliveryFee)kr - " + store.deliveryTime)
+            List(store.bouquets) { bouq in
+                BouquetView(bouq: bouq)
+            }
+        }
     }
+    
     
 }
 
@@ -137,6 +152,23 @@ struct RowView: View {
                         .font(.system(size: 14))
                         .foregroundColor(.gray)
             }
+        }
+    }
+}
+
+struct BouquetView: View {
+    let bouq : Bouquet
+    
+    var body: some View {
+        HStack{
+            VStack{
+                Text(bouq.name)
+                Text("\(bouq.price)")
+            }
+            Spacer()
+            Image(bouq.image)
+                .resizable()
+                .frame(width: 80, height: 80)
         }
     }
 }

@@ -26,6 +26,7 @@
 		74029D452981399800DDC42B /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74029D442981399800DDC42B /* Store.swift */; };
 		74029D4729813A3000DDC42B /* Stores.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74029D4629813A3000DDC42B /* Stores.swift */; };
 		74029D492981694A00DDC42B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 74029D482981694800DDC42B /* GoogleService-Info.plist */; };
+		74905123298297D3000046C2 /* Bouquet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74905122298297D3000046C2 /* Bouquet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +61,7 @@
 		74029D4629813A3000DDC42B /* Stores.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stores.swift; sourceTree = "<group>"; };
 		74029D482981694800DDC42B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		74029D4A29816AC900DDC42B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		74905122298297D3000046C2 /* Bouquet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bouquet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 		74029CF92981244F00DDC42B = {
 			isa = PBXGroup;
 			children = (
+				74905122298297D3000046C2 /* Bouquet.swift */,
 				74029D042981244F00DDC42B /* Flower */,
 				74029D152981245300DDC42B /* FlowerTests */,
 				74029D1F2981245300DDC42B /* FlowerUITests */,
@@ -303,6 +306,7 @@
 			files = (
 				74029D452981399800DDC42B /* Store.swift in Sources */,
 				74029D082981244F00DDC42B /* ContentView.swift in Sources */,
+				74905123298297D3000046C2 /* Bouquet.swift in Sources */,
 				74029D062981244F00DDC42B /* FlowerApp.swift in Sources */,
 				74029D4729813A3000DDC42B /* Stores.swift in Sources */,
 			);
