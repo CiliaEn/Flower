@@ -31,27 +31,62 @@ struct ContentView: View {
                         
                         NavigationLink(destination: StoreView(store: store)){
                             RowView(store: store)
+                                
                         }
                     }
                 }
+                .frame(width: 420)
             }
-            .onAppear(){
-                listenToFirestore()
-            }
+            
             .searchable(text: $searchText)
             .tabItem {
                 Image(systemName: "house.fill")
                 Text("Home")
             }
+            .onAppear(){
+                listenToFirestore()
+            }
             NavigationStack {
-                Text("Searching for \(searchText)")
+                if (searchText != ""){
+                    List {
+                        ForEach(searchResults, id: \.self) { store in
+                            
+                            NavigationLink(destination: StoreView(store: store)){
+                                RowView(store: store)
+                            }
+                        }
+                    }
+                }
+                VStack{
+                    HStack{
+                        Image("offers")
+                            .resizable()
+                            .frame(width: 180, height: 160)
+                        Image("near")
+                            .resizable()
+                            .frame(width: 180, height: 160)
+                    }
+                    HStack{
+                        Image("fast")
+                            .resizable()
+                            .frame(width: 180, height: 160)
+                        Image("best")
+                            .resizable()
+                            .frame(width: 180, height: 160)
+                    }
+                    Text("Mina beställningar")
+                    
+                }
+                
             }
             .searchable(text: $searchText)
             .tabItem {
                 Image(systemName: "magnifyingglass")
                 Text("Search")
             }
-            
+            .onAppear(){
+                listenToFirestore()
+            }
             
             Text("shopping cart")
                 .tabItem {
@@ -59,13 +94,30 @@ struct ContentView: View {
                     Text("Cart")
                 }
             
-            Text("account view")
+            NavigationStack{
+                Text("Namn Efternamn")
+                    .font(.system(size: 36))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
+                Text("0701234567")
+                    .font(.system(size: 16))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .foregroundColor(.gray)
+                    .padding()
+                VStack{
+                    ItemView(img: "list.bullet.clipboard", text: "Beställningar")
+                    ItemView(img: "dollarsign.square", text: "Betalning")
+                    ItemView(img: "megaphone", text: "Kampanjer")
+                    ItemView(img: "questionmark.circle", text: "Hjälp")
+                    ItemView(img: "gearshape", text: "Inställningar")
+                }
+                Spacer()
+            }
                 .tabItem {
                     Image(systemName: "person.fill")
                     Text("Account")
                 }
         }
-        
         
     }
     
@@ -108,6 +160,23 @@ struct ContentView: View {
     }
 }
 
+struct ItemView : View {
+    
+    let img : String
+    let text : String
+    
+    var body: some View {
+        HStack{
+            Image(systemName: img)
+                .font(.system(size: 20))
+            Text(text)
+                .font(.system(size: 20))
+            Spacer()
+        }
+        .padding()
+    }
+}
+
 
 
 struct StoreView : View {
@@ -128,14 +197,6 @@ struct StoreView : View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
-}
-
-
-
 struct RowView: View {
     let store: Store
     
@@ -143,16 +204,20 @@ struct RowView: View {
         VStack{
             Image(store.image)
                 .resizable()
-                .frame(width: 400, height: 160)
+                .frame(width: 397, height: 160)
             HStack{
                
-                
                 Text(store.name)
-               
-                    Text("\(store.deliveryFee)kr - " + store.deliveryTime)
-                        .font(.system(size: 14))
-                        .foregroundColor(.gray)
+                  //  .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                Text("\(store.deliveryFee)kr - " + store.deliveryTime)
+                    .font(.system(size: 14))
+                    .foregroundColor(.gray)
+                
+                    
             }
+           // .padding()
+    
         }
     }
 }
@@ -171,5 +236,11 @@ struct BouquetView: View {
                 .resizable()
                 .frame(width: 80, height: 80)
         }
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
     }
 }
