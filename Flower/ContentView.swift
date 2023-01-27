@@ -35,18 +35,23 @@ struct ContentView: View {
                     }
                 }
             }
+            .onAppear(){
+                listenToFirestore()
+            }
             .searchable(text: $searchText)
             .tabItem {
                 Image(systemName: "house.fill")
                 Text("Home")
             }
+            NavigationStack {
+                Text("Searching for \(searchText)")
+            }
+            .searchable(text: $searchText)
+            .tabItem {
+                Image(systemName: "magnifyingglass")
+                Text("Search")
+            }
             
-            Text("Searching for \(searchText)")
-                .searchable(text: $searchText)
-                .tabItem {
-                    Image(systemName: "magnifyingglass")
-                    Text("Search")
-                }
             
             Text("shopping cart")
                 .tabItem {
@@ -61,12 +66,7 @@ struct ContentView: View {
                 }
         }
         
-        .onAppear(){
-            
-            
-            listenToFirestore()
-            
-        }
+        
     }
     
     func saveToFirestore (_ storeName : String, _ fee: Int, _ time : String, _ img: String, _ bouquets: [Bouquet]) {
