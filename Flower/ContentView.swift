@@ -60,25 +60,7 @@ struct ContentView: View {
                         }
                     }
                 }
-                VStack{
-                    HStack{
-                        Image("offers")
-                            .resizable()
-                            .frame(width: 180, height: 160)
-                        Image("near")
-                            .resizable()
-                            .frame(width: 180, height: 160)
-                    }
-                    HStack{
-                        Image("fast")
-                            .resizable()
-                            .frame(width: 180, height: 160)
-                        Image("best")
-                            .resizable()
-                            .frame(width: 180, height: 160)
-                    }
-                    Text("Mina beställningar")
-                }
+                SearchView()
             }
             .searchable(text: $searchText)
             .tabItem {
@@ -417,6 +399,78 @@ struct BouquetView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        SearchView()
+    }
+}
+
+struct SearchView: View {
+    var body: some View {
+        VStack{
+            HStack{
+                ZStack{
+                    Image("offers")
+                        .resizable()
+                        .frame(width: 180, height: 160)
+                    VStack{
+                        Image(systemName: "percent")
+                            .resizable()
+                            .frame(width: 50, height: 48)
+                        
+                        Text("Kampanjer")
+                            .font(.system (size: 20))
+                           
+                    }
+                }
+                ZStack{
+                    Image("near")
+                        .resizable()
+                        .frame(width: 180, height: 160)
+                    VStack{
+                        Image(systemName: "mappin.and.ellipse")
+                            .resizable()
+                            .frame(width: 50, height: 55)
+                        
+                        Text("Nära mig")
+                            .font(.system (size: 20))
+                           
+                    }
+                }
+            }
+            HStack{
+                ZStack{
+                    Image("fast")
+                        .resizable()
+                        .frame(width: 180, height: 160)
+                    VStack{
+                        Image(systemName: "box.truck.badge.clock")
+                            .resizable()
+                            .frame(width: 65, height: 50)
+                        
+                        Text("Snabb leverans")
+                            .font(.system (size: 20))
+                           
+                    }
+                }
+                ZStack{
+                    Image("best")
+                        .resizable()
+                        .frame(width: 180, height: 160)
+                    VStack{
+                        Image(systemName: "medal")
+                            .resizable()
+                            .frame(width: 50, height: 55)
+                        
+                        Text("Bäst omdömen")
+                            .font(.system (size: 20))
+                           
+                    }
+                }
+
+            }
+            Text("Mina beställningar")
+                .font(.system (size: 20))
+            
+            Spacer()
+        }
     }
 }
