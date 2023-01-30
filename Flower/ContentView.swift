@@ -78,9 +78,7 @@ struct ContentView: View {
                             .frame(width: 180, height: 160)
                     }
                     Text("Mina beställningar")
-                    
                 }
-                
             }
             .searchable(text: $searchText)
             .tabItem {
@@ -106,8 +104,6 @@ struct ContentView: View {
                     Image(systemName: "person.fill")
                     Text("Account")
                 }
-            
-            
         }
     }
     
@@ -158,38 +154,50 @@ struct SignUpView : View {
     @State private var number: String = ""
     @State private var password: String = ""
     @State var loggedIn = false
+    @State var signIn = false
     @State private var user: User? = nil
     
     var body: some View {
         
         if loggedIn {
             AccountView()
+        } else if signIn {
+            SignInView()
         } else{
             VStack {
+                Spacer()
                 TextField("Username", text: $name)
                     .padding()
-                    .cornerRadius(5.0)
+                    .padding(.leading, 50)
                     .padding(.bottom, 20)
                 TextField("Phone number", text: $number)
                     .padding()
-                    .cornerRadius(5.0)
+                    .padding(.leading, 50)
                     .padding(.bottom, 20)
                 TextField("Email", text: $email)
                     .padding()
-                    .cornerRadius(5.0)
+                    .padding(.leading, 50)
                     .padding(.bottom, 20)
                 SecureField("Password", text: $password)
                     .padding()
-                    .cornerRadius(5.0)
+                    .padding(.leading, 50)
                     .padding(.bottom, 20)
                 Button(action: signUp) {
-                    Text("Sign Up")
+                    Text("SIGN UP")
                 }
+                .buttonStyle(.bordered)
+                .tint(.accentColor)
+                .font(.system(size: 20))
+                .foregroundColor(.blue)
+                .padding()
+                Text("Already have an account, Log in")
+                .onTapGesture {
+                    signIn = true
+                }
+                Spacer()
             }
         }
     }
-    
-    
     
     func signUp() {
         Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
@@ -221,26 +229,43 @@ struct SignInView : View {
     @State private var email: String = ""
     @State private var password: String = ""
     @State var loggedIn = false
+    @State var signUp = false
     @State private var user: User? = nil
     
     var body: some View {
         if loggedIn {
             AccountView()
-        }else {
+        }
+        else if signUp {
+            SignUpView()
+        }
+            else {
             VStack {
+                Spacer()
                 TextField("Email", text: $email)
                     .padding()
-                    .cornerRadius(5.0)
+                    .padding(.leading, 50)
                     .padding(.bottom, 20)
                 
                 SecureField("Password", text: $password)
                     .padding()
-                    .cornerRadius(5.0)
+                    .padding(.leading, 50)
                     .padding(.bottom, 20)
                 
                 Button(action: login) {
                     Text("Login")
                 }
+                .buttonStyle(.bordered)
+                .tint(.accentColor)
+                .font(.system(size: 20))
+                .foregroundColor(.blue)
+                .padding()
+                    Text("Create an account")
+                    .onTapGesture {
+                        signUp = true
+                    }
+                Spacer()
+                
             }
         }
        }
@@ -364,19 +389,11 @@ struct RowView: View {
             Image(store.image)
                 .resizable()
                 .frame(width: 397, height: 160)
-            HStack{
-               
+            
                 Text(store.name)
-                  //  .frame(maxWidth: .infinity, alignment: .leading)
-                    
                 Text("\(store.deliveryFee)kr - " + store.deliveryTime)
                     .font(.system(size: 14))
                     .foregroundColor(.gray)
-                
-                    
-            }
-           // .padding()
-    
         }
     }
 }
