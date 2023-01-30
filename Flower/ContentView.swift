@@ -98,7 +98,8 @@ struct ContentView: View {
                 }
             
             NavigationStack{
-                SignUpView()
+                //SignUpView()
+                SignInView()
                 
             }
                 .tabItem {
@@ -157,6 +158,7 @@ struct SignUpView : View {
     @State private var number: String = ""
     @State private var password: String = ""
     @State var loggedIn = false
+    @State private var user: User? = nil
     
     var body: some View {
         
@@ -217,26 +219,30 @@ struct SignUpView : View {
 struct SignInView : View {
     
     @State private var email: String = ""
-        @State private var password: String = ""
+    @State private var password: String = ""
+    @State var loggedIn = false
+    @State private var user: User? = nil
     
     var body: some View {
-           VStack {
-               TextField("Email", text: $email)
-                   .padding()
-                   .background(Color.gray)
-                   .cornerRadius(5.0)
-                   .padding(.bottom, 20)
-               
-               SecureField("Password", text: $password)
-                   .padding()
-                   .background(Color.gray)
-                   .cornerRadius(5.0)
-                   .padding(.bottom, 20)
-               
-               Button(action: login) {
-                   Text("Login")
-               }
-           }
+        if loggedIn {
+            AccountView()
+        }else {
+            VStack {
+                TextField("Email", text: $email)
+                    .padding()
+                    .cornerRadius(5.0)
+                    .padding(.bottom, 20)
+                
+                SecureField("Password", text: $password)
+                    .padding()
+                    .cornerRadius(5.0)
+                    .padding(.bottom, 20)
+                
+                Button(action: login) {
+                    Text("Login")
+                }
+            }
+        }
        }
     func login() {
             Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
@@ -244,32 +250,70 @@ struct SignInView : View {
                     print("Error logging in \(error)")
                 } else {
                     // Login successful
+                    loggedIn = true
                 }
             }
         }
 }
 
 struct AccountView : View {
+    @State private var user: User? = nil
+    @State var signedOut = false
+    
     var body: some View {
-        Text("Namn")
-            .font(.system(size: 36))
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding()
-        Text("0701234567")
-            .font(.system(size: 16))
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .foregroundColor(.gray)
-            .padding()
-
         VStack{
-            ItemView(img: "list.bullet.clipboard", text: "Beställningar")
-            ItemView(img: "dollarsign.square", text: "Betalning")
-            ItemView(img: "megaphone", text: "Kampanjer")
-            ItemView(img: "questionmark.circle", text: "Hjälp")
-            ItemView(img: "gearshape", text: "Inställningar")
+            if signedOut {
+                SignInView()
+            } else{
+                if let user = user {
+                    Text(user.name)
+                        .font(.system(size: 36))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding()
+                    Text(user.phoneNumber)
+                        .font(.system(size: 16))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(.gray)
+                        .padding()
+                    
+                    
+                    ItemView(img: "list.bullet.clipboard", text: "Beställningar")
+                    ItemView(img: "dollarsign.square", text: "Betalning")
+                    ItemView(img: "megaphone", text: "Kampanjer")
+                    ItemView(img: "questionmark.circle", text: "Hjälp")
+                    ItemView(img: "gearshape", text: "Inställningar")
+                    Spacer()
+                    Button(action: {
+                        try! Auth.auth().signOut()
+                        signedOut = true
+                        print("sign out succeed")
+                    }) { Text("Sign out")}
+                }
+            }
+            
+        }
+        .onAppear() {
+            getUser()
         }
         Spacer()
     }
+    
+    func getUser() {
+            guard let user = Auth.auth().currentUser else { return }
+            let db = Firestore.firestore()
+            let docRef = db.collection("users").document(user.uid)
+            
+            docRef.getDocument { (document, error) in
+                if let document = document, document.exists {
+                    let name = document.get("name") as? String ?? ""
+                    let email = document.get("email") as? String ?? ""
+                    let phoneNumber = document.get("phoneNumber") as? String ?? ""
+                    self.user = User(name: name, phoneNumber: phoneNumber, email: email)
+                } else {
+                    // Handle error
+                }
+            }
+        }
     
     
     
