@@ -7,6 +7,8 @@
 
 import SwiftUI
 import FirebaseFirestore
+import FirebaseCore
+import FirebaseAuth
 
 //first comment
 
@@ -14,6 +16,7 @@ struct ContentView: View {
     
     @StateObject var stores = Stores()
     @State private var searchText = ""
+    
     
     var searchResults: [Store] {
         if searchText.isEmpty {
@@ -31,7 +34,7 @@ struct ContentView: View {
                         
                         NavigationLink(destination: StoreView(store: store)){
                             RowView(store: store)
-                                
+                            
                         }
                     }
                 }
@@ -95,31 +98,19 @@ struct ContentView: View {
                 }
             
             NavigationStack{
-                Text("Namn Efternamn")
-                    .font(.system(size: 36))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding()
-                Text("0701234567")
-                    .font(.system(size: 16))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .foregroundColor(.gray)
-                    .padding()
-                VStack{
-                    ItemView(img: "list.bullet.clipboard", text: "Beställningar")
-                    ItemView(img: "dollarsign.square", text: "Betalning")
-                    ItemView(img: "megaphone", text: "Kampanjer")
-                    ItemView(img: "questionmark.circle", text: "Hjälp")
-                    ItemView(img: "gearshape", text: "Inställningar")
-                }
-                Spacer()
+                SignUpView()
+                
             }
                 .tabItem {
                     Image(systemName: "person.fill")
                     Text("Account")
                 }
+            
+            
         }
-        
     }
+    
+    
     
     func saveToFirestore (_ storeName : String, _ fee: Int, _ time : String, _ img: String, _ bouquets: [Bouquet]) {
         let db = Firestore.firestore()
@@ -158,6 +149,130 @@ struct ContentView: View {
             }
         }
     }
+}
+
+struct SignUpView : View {
+    @State private var email: String = ""
+    @State private var name: String = ""
+    @State private var number: String = ""
+    @State private var password: String = ""
+    @State var loggedIn = false
+    
+    var body: some View {
+        
+        if loggedIn {
+            AccountView()
+        } else{
+            VStack {
+                TextField("Username", text: $name)
+                    .padding()
+                    .cornerRadius(5.0)
+                    .padding(.bottom, 20)
+                TextField("Phone number", text: $number)
+                    .padding()
+                    .cornerRadius(5.0)
+                    .padding(.bottom, 20)
+                TextField("Email", text: $email)
+                    .padding()
+                    .cornerRadius(5.0)
+                    .padding(.bottom, 20)
+                SecureField("Password", text: $password)
+                    .padding()
+                    .cornerRadius(5.0)
+                    .padding(.bottom, 20)
+                Button(action: signUp) {
+                    Text("Sign Up")
+                }
+            }
+        }
+    }
+    
+    
+    
+    func signUp() {
+        Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
+            if let error = error {
+                print("Error signing up \(error)")
+            } else {
+                let user = User(name: self.name, phoneNumber: self.number, email: self.email)
+                print("Sign up succesful")
+                let userData = try! JSONEncoder().encode(user)
+                let userDictionary = try! JSONSerialization.jsonObject(with: userData, options: []) as! [String: Any]
+                
+                let db = Firestore.firestore()
+                let userRef = db.collection("users").document(result!.user.uid)
+                userRef.setData(userDictionary) { (error) in
+                    if let error = error {
+                        print("Error saving  \(error)")
+                    } else {
+                        loggedIn = true
+                        print("Saving user to db successful")
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct SignInView : View {
+    
+    @State private var email: String = ""
+        @State private var password: String = ""
+    
+    var body: some View {
+           VStack {
+               TextField("Email", text: $email)
+                   .padding()
+                   .background(Color.gray)
+                   .cornerRadius(5.0)
+                   .padding(.bottom, 20)
+               
+               SecureField("Password", text: $password)
+                   .padding()
+                   .background(Color.gray)
+                   .cornerRadius(5.0)
+                   .padding(.bottom, 20)
+               
+               Button(action: login) {
+                   Text("Login")
+               }
+           }
+       }
+    func login() {
+            Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
+                if let error = error {
+                    print("Error logging in \(error)")
+                } else {
+                    // Login successful
+                }
+            }
+        }
+}
+
+struct AccountView : View {
+    var body: some View {
+        Text("Namn")
+            .font(.system(size: 36))
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding()
+        Text("0701234567")
+            .font(.system(size: 16))
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .foregroundColor(.gray)
+            .padding()
+
+        VStack{
+            ItemView(img: "list.bullet.clipboard", text: "Beställningar")
+            ItemView(img: "dollarsign.square", text: "Betalning")
+            ItemView(img: "megaphone", text: "Kampanjer")
+            ItemView(img: "questionmark.circle", text: "Hjälp")
+            ItemView(img: "gearshape", text: "Inställningar")
+        }
+        Spacer()
+    }
+    
+    
+    
 }
 
 struct ItemView : View {
