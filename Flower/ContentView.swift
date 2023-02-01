@@ -59,8 +59,9 @@ struct ContentView: View {
                             }
                         }
                     }
+                } else {
+                    SearchView()
                 }
-                SearchView()
             }
             .searchable(text: $searchText)
             .tabItem {
