@@ -16,7 +16,7 @@ struct ContentView: View {
     
     @StateObject var stores = Stores()
     @State private var searchText = ""
-    
+    @State private var user: User? = nil
     
     var searchResults: [Store] {
         if searchText.isEmpty {
@@ -32,7 +32,7 @@ struct ContentView: View {
                 List {
                     ForEach(searchResults, id: \.self) { store in
                         
-                        NavigationLink(destination: StoreView(store: store)){
+                        NavigationLink(destination: StoreView(store: store, user: user)){
                             RowView(store: store)
                             
                         }
@@ -54,7 +54,7 @@ struct ContentView: View {
                     List {
                         ForEach(searchResults, id: \.self) { store in
                             
-                            NavigationLink(destination: StoreView(store: store)){
+                            NavigationLink(destination: StoreView(store: store, user: user)){
                                 RowView(store: store)
                             }
                         }
@@ -79,14 +79,22 @@ struct ContentView: View {
                 }
             
             NavigationStack{
-                //SignUpView()
-                SignInView()
+                if let user = user{
+                    AccountView(user: user)
+                } else {
+                    SignInView()
+                }
+                
+                
                 
             }
                 .tabItem {
                     Image(systemName: "person.fill")
                     Text("Account")
                 }
+        }
+        .onAppear(){
+            getUser()
         }
     }
     
@@ -129,6 +137,22 @@ struct ContentView: View {
             }
         }
     }
+    func getUser() {
+        guard let user = Auth.auth().currentUser else { return }
+        let db = Firestore.firestore()
+        let docRef = db.collection("users").document(user.uid)
+        
+        docRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                let name = document.get("name") as? String ?? ""
+                let email = document.get("email") as? String ?? ""
+                let phoneNumber = document.get("phoneNumber") as? String ?? ""
+                self.user = User(name: name, phoneNumber: phoneNumber, email: email)
+            } else {
+                // Handle error
+            }
+        }
+    }
 }
 
 struct SignUpView : View {
@@ -136,14 +160,14 @@ struct SignUpView : View {
     @State private var name: String = ""
     @State private var number: String = ""
     @State private var password: String = ""
-    @State var loggedIn = false
     @State var signIn = false
-    @State private var user: User? = nil
+    @State var user : User?
+    
     
     var body: some View {
         
-        if loggedIn {
-            AccountView()
+        if user != nil {
+            AccountView(user: user)
         } else if signIn {
             SignInView()
         } else{
@@ -187,9 +211,9 @@ struct SignUpView : View {
             if let error = error {
                 print("Error signing up \(error)")
             } else {
-                let user = User(name: self.name, phoneNumber: self.number, email: self.email)
+                let newUser = User(name: self.name, phoneNumber: self.number, email: self.email)
                 print("Sign up succesful")
-                let userData = try! JSONEncoder().encode(user)
+                let userData = try! JSONEncoder().encode(newUser)
                 let userDictionary = try! JSONSerialization.jsonObject(with: userData, options: []) as! [String: Any]
                 
                 let db = Firestore.firestore()
@@ -198,7 +222,7 @@ struct SignUpView : View {
                     if let error = error {
                         print("Error saving  \(error)")
                     } else {
-                        loggedIn = true
+                        user = newUser
                         print("Saving user to db successful")
                     }
                 }
@@ -217,7 +241,7 @@ struct SignInView : View {
     
     var body: some View {
         if loggedIn {
-            AccountView()
+            AccountView(user: user)
         }
         else if signUp {
             SignUpView()
@@ -258,14 +282,31 @@ struct SignInView : View {
                     print("Error logging in \(error)")
                 } else {
                     // Login successful
+                    getUser()
                     loggedIn = true
                 }
             }
         }
+    func getUser() {
+        guard let user = Auth.auth().currentUser else { return }
+        let db = Firestore.firestore()
+        let docRef = db.collection("users").document(user.uid)
+        
+        docRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                let name = document.get("name") as? String ?? ""
+                let email = document.get("email") as? String ?? ""
+                let phoneNumber = document.get("phoneNumber") as? String ?? ""
+                self.user = User(name: name, phoneNumber: phoneNumber, email: email)
+            } else {
+                // Handle error
+            }
+        }
+    }
 }
 
 struct AccountView : View {
-    @State private var user: User? = nil
+    let user: User?
     @State var signedOut = false
     
     var body: some View {
@@ -300,32 +341,15 @@ struct AccountView : View {
             }
             
         }
-        .onAppear() {
-            getUser()
-        }
         Spacer()
     }
     
-    func getUser() {
-            guard let user = Auth.auth().currentUser else { return }
-            let db = Firestore.firestore()
-            let docRef = db.collection("users").document(user.uid)
-            
-            docRef.getDocument { (document, error) in
-                if let document = document, document.exists {
-                    let name = document.get("name") as? String ?? ""
-                    let email = document.get("email") as? String ?? ""
-                    let phoneNumber = document.get("phoneNumber") as? String ?? ""
-                    self.user = User(name: name, phoneNumber: phoneNumber, email: email)
-                } else {
-                    // Handle error
-                }
-            }
-        }
+    
     
     
     
 }
+
 
 struct ItemView : View {
     
@@ -349,6 +373,7 @@ struct ItemView : View {
 struct StoreView : View {
     
     let store : Store
+    let user : User?
     
     var body: some View{
         VStack{
@@ -358,7 +383,7 @@ struct StoreView : View {
             Text(store.name)
             Text("\(store.deliveryFee)kr - " + store.deliveryTime)
             List(store.bouquets) { bouq in
-                BouquetView(bouq: bouq)
+                BouquetView(user: user, bouq: bouq)
             }
         }
     }
@@ -382,7 +407,10 @@ struct RowView: View {
 }
 
 struct BouquetView: View {
+    let user: User?
+  
     let bouq : Bouquet
+    
     
     var body: some View {
         HStack{
@@ -391,12 +419,56 @@ struct BouquetView: View {
                 Text("\(bouq.price)")
             }
             Spacer()
-            Image(bouq.image)
-                .resizable()
-                .frame(width: 80, height: 80)
+            VStack{
+                Image(bouq.image)
+                    .resizable()
+                    .frame(width: 80, height: 80)
+                Button(action: {
+                    
+                    if let user = user{
+                        
+                        
+                        if user.orderIsStarted{
+                                        //find active order and add bouquet
+                            for order in user.orders {
+                                if order.isActive {
+                                    order.addBouquet(bouq)
+                                    print("adding bouq to existing order")
+                                    
+                                }
+                            }
+                        }
+                        else {
+                            //create new order and add bouquet and add order to user
+                            let newOrder = Order()
+                            newOrder.isActive = true
+                            newOrder.addBouquet(bouq)
+                            user.orders.append(newOrder)
+                            user.orderIsStarted = true
+                            print("creating new order")
+                            
+                        }
+                        guard let usern = Auth.auth().currentUser else { return }
+                        let db = Firestore.firestore()
+                        let userRef = db.collection("users").document(usern.uid)
+                        userRef.setData(try! Firestore.Encoder().encode(user)) { (error) in
+                          if let error = error {
+                            print("Error updating user: \(error)")
+                          } else {
+                            print("User successfully updated")
+                          }
+                        }
+                    }
+               
+                }) { Text("Buy")}
+            }
+            
         }
+        
+            }
+    
     }
-}
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

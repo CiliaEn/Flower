@@ -9,10 +9,7 @@ import Foundation
 import FirebaseFirestoreSwift
 
 struct Store : Identifiable, Codable, Hashable {
-    
-    
-    
-    
+   
     @DocumentID var id : String?
     
     var name : String
@@ -28,7 +25,5 @@ struct Store : Identifiable, Codable, Hashable {
     func hash(into hasher: inout Hasher) {
             hasher.combine(id)
         }
-    
    
-    
 }

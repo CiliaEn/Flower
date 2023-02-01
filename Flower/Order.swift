@@ -7,7 +7,17 @@
 
 import Foundation
 
-struct Order {
+class Order : Codable {
     
-    var order : [Bouquet]
+    var bouquets : [Bouquet]
+    var isActive = true
+    
+    init(bouquets: [Bouquet] = []) {
+            self.bouquets = bouquets
+        }
+        
+    func addBouquet(_ bouq : Bouquet) {
+        bouquets.append(bouq)
+    }
+    
 }
