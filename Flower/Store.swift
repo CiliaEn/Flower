@@ -6,15 +6,29 @@
 //
 
 import Foundation
-//import FirebaseFirestoreSwift
+import FirebaseFirestoreSwift
 
-struct Store : Identifiable {
-   // @DocumentID var id : String?
+struct Store : Identifiable, Codable, Hashable {
     
-    var id = UUID()
+    
+    
+    
+    @DocumentID var id : String?
     
     var name : String
     var deliveryFee : Int
     var deliveryTime : String
     var image : String
+    var bouquets : [Bouquet]
+    
+    static func == (lhs: Store, rhs: Store) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
+    
+   
+    
 }
