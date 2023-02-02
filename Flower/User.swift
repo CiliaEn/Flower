@@ -7,7 +7,7 @@
 
 import Foundation
 
-class User : Codable {
+class User : Codable, ObservableObject {
     
     var name : String
     var phoneNumber : String
