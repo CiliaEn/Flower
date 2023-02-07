@@ -52,6 +52,7 @@ struct ContentView: View {
             }
             .onAppear(){
                 listenToFirestore()
+                userManager.getUser()
                 
             }
             //Search page
@@ -81,8 +82,10 @@ struct ContentView: View {
             NavigationStack{
                 Text("shopping")
                 
+                
                 if let user = userManager.user {
                     if user.orderIsStarted{
+                        
                         List {
                             ForEach(activeOrder.bouquets) { bouquet in
                                 HStack {
@@ -95,6 +98,14 @@ struct ContentView: View {
                                 }
                             }
                         }
+                        Button(action: {
+                            user.orderIsStarted = false
+                            activeOrder.isActive = false
+                            userManager.saveUserToFirestore()
+                            print("\(user.orderIsStarted)")
+                        }) {
+                            Text("Buy")
+                        }
                     }
                 }
               
@@ -104,7 +115,9 @@ struct ContentView: View {
                 Text("Cart")
             }
             .onAppear(){
+                userManager.getUser()
                 if let user = userManager.user{
+                    print("\(user.orderIsStarted)")
                     for order in user.orders {
                         if order.isActive {
                             activeOrder = order
@@ -314,7 +327,7 @@ struct SignInView : View {
 
 struct AccountView : View {
     @ObservedObject var userManager: UserManager
-    @State var signedOut = false
+    
     
     var body: some View {
         VStack{
