@@ -7,14 +7,16 @@
 
 import Foundation
 
-class Order : Codable {
+class Order : Codable, Identifiable {
     
+    let id = UUID()
     var bouquets : [Bouquet]
-    var isActive = true
+    var date : String
     
-    init(bouquets: [Bouquet] = []) {
-            self.bouquets = bouquets
-        }
+    init(bouquets: [Bouquet] = [], date: String = "") {
+        self.bouquets = bouquets
+        self.date = date
+    }
         
     func addBouquet(_ bouq : Bouquet) {
         bouquets.append(bouq)

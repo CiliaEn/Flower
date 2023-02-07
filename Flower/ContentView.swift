@@ -17,7 +17,7 @@ struct ContentView: View {
     @StateObject var stores = Stores()
     @State private var searchText = ""
    // @ObservedObject private var user: User
-    @State var activeOrder = Order()
+   // @State var activeOrder = Order()
    
     @ObservedObject var userManager = UserManager()
     
@@ -84,10 +84,10 @@ struct ContentView: View {
                 
                 
                 if let user = userManager.user {
-                    if user.orderIsStarted{
+                    if let order = user.activeOrder {
                         
                         List {
-                            ForEach(activeOrder.bouquets) { bouquet in
+                            ForEach(order.bouquets) { bouquet in
                                 HStack {
                                     VStack(alignment: .leading) {
                                         Text(bouquet.name)
@@ -99,10 +99,14 @@ struct ContentView: View {
                             }
                         }
                         Button(action: {
-                            user.orderIsStarted = false
-                            activeOrder.isActive = false
+                            let date = Date()
+                            let dateFormatter = DateFormatter()
+                            dateFormatter.dateFormat = "MM/dd/yyyy"
+                            let dateString = dateFormatter.string(from: date)
+                            order.date = dateString
+                            user.orders.append(order)
+                            user.activeOrder = nil
                             userManager.saveUserToFirestore()
-                            print("\(user.orderIsStarted)")
                         }) {
                             Text("Buy")
                         }
@@ -116,14 +120,6 @@ struct ContentView: View {
             }
             .onAppear(){
                 userManager.getUser()
-                if let user = userManager.user{
-                    print("\(user.orderIsStarted)")
-                    for order in user.orders {
-                        if order.isActive {
-                            activeOrder = order
-                        }
-                    }
-                }
                 
             }
          
@@ -345,8 +341,10 @@ struct AccountView : View {
                         .foregroundColor(.gray)
                         .padding()
                     
-                    
+                NavigationLink(destination: OrderListView(userManager: userManager)){
                     ItemView(img: "list.bullet.clipboard", text: "Beställningar")
+                }
+                    
                     ItemView(img: "dollarsign.square", text: "Betalning")
                     ItemView(img: "megaphone", text: "Kampanjer")
                     ItemView(img: "questionmark.circle", text: "Hjälp")
@@ -367,6 +365,27 @@ struct AccountView : View {
     
     
     
+}
+
+struct OrderListView : View {
+    
+    @ObservedObject var userManager: UserManager
+    
+    var body: some View {
+        List{
+            if let user = userManager.user {
+                ForEach (user.orders) { order in
+                    
+                    Text(order.date)
+                    
+                }
+            }
+           
+        }
+        .onAppear(){
+            userManager.getUser()
+        }
+    }
 }
 
 
@@ -447,23 +466,16 @@ struct BouquetView: View {
                 Button(action: {
                     
                     if let user = userManager.user{
-                        if user.orderIsStarted{
-                                            //find active order and add bouquet
-                            for order in user.orders {
-                                    if order.isActive {
-                                        order.addBouquet(bouq)
-                                        print("adding bouq to existing order")
-                                        
-                                    }
-                                }
-                            }
+                        
+                        if let order = user.activeOrder {
+                            order.addBouquet(bouq)
+                            print("adding bouq to existing order")
+                        }
                             else {
                                 //create new order and add bouquet and add order to user
-                                let newOrder = Order()
-                                newOrder.isActive = true
+                                let newOrder = Order(bouquets: [], date: "")
                                 newOrder.addBouquet(bouq)
-                                user.orders.append(newOrder)
-                                user.orderIsStarted = true
+                                user.activeOrder = newOrder
                                 print("creating new order")
                                 
                             }
