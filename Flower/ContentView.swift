@@ -80,7 +80,7 @@ struct ContentView: View {
             }
             //shopping cart page
             NavigationStack{
-                Text("shopping")
+                Text("Your cart is empty!")
                 
                 
                 if let user = userManager.user {
@@ -101,7 +101,7 @@ struct ContentView: View {
                         Button(action: {
                             let date = Date()
                             let dateFormatter = DateFormatter()
-                            dateFormatter.dateFormat = "MM/dd/yyyy"
+                            dateFormatter.dateFormat = "dd/MM/yyyy"
                             let dateString = dateFormatter.string(from: date)
                             order.date = dateString
                             user.orders.append(order)
@@ -372,11 +372,15 @@ struct OrderListView : View {
     @ObservedObject var userManager: UserManager
     
     var body: some View {
+        Text("Orderhistorik")
+            .font(.system(size: 20))
         List{
             if let user = userManager.user {
                 ForEach (user.orders) { order in
+                    NavigationLink(destination: OrderView(userManager: userManager, order: order)){
+                        Text(order.date)
+                    }
                     
-                    Text(order.date)
                     
                 }
             }
@@ -384,6 +388,26 @@ struct OrderListView : View {
         }
         .onAppear(){
             userManager.getUser()
+        }
+    }
+}
+
+struct OrderView : View {
+    
+    @ObservedObject var userManager: UserManager
+    let order : Order
+    
+    var body: some View {
+        
+        List {
+            ForEach (order.bouquets) { bouq in
+                
+                    HStack{
+                        Text(bouq.name)
+                        Spacer()
+                        Text("\(bouq.price)")
+                    }
+            }
         }
     }
 }
@@ -481,9 +505,6 @@ struct BouquetView: View {
                             }
                         userManager.saveUserToFirestore()
                     }
-                    
-                    
-                    
                     
                 }) { Text("Buy")}
             }
