@@ -9,6 +9,7 @@ import SwiftUI
 import FirebaseFirestore
 import FirebaseCore
 import FirebaseAuth
+import GoogleMaps
 
 //first comment
 
@@ -443,12 +444,29 @@ struct StoreView : View {
             Image(store.image)
                 .resizable()
                 .frame(width: 400, height: 240)
-            Text(store.name)
-            Text("\(store.deliveryFee)kr - " + store.deliveryTime)
+            HStack {
+                Text(store.name)
+                Text("\(store.deliveryFee)kr - " + store.deliveryTime)
+            }
+            NavigationLink(destination: MapView()) {
+                                Text("Visa på kartan")
+                            }
+
             List(store.bouquets) { bouq in
                 BouquetView(userManager: userManager, bouq: bouq)
             }
         }
+    }
+}
+
+struct MapView: UIViewRepresentable {
+    func makeUIView(context: Context) -> GMSMapView {
+        let camera = GMSCameraPosition.camera(withLatitude: 37.7749, longitude: -122.4194, zoom: 11.0)
+        let mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
+        return mapView
+    }
+
+    func updateUIView(_ uiView: GMSMapView, context: Context) {
     }
 }
 
