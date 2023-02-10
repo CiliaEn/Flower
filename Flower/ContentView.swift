@@ -9,6 +9,7 @@ import SwiftUI
 import FirebaseFirestore
 import FirebaseCore
 import FirebaseAuth
+import GoogleMaps
 
 //first comment
 
@@ -16,7 +17,10 @@ struct ContentView: View {
     
     @StateObject var stores = Stores()
     @State private var searchText = ""
-    
+   // @ObservedObject private var user: User
+   // @State var activeOrder = Order()
+   
+    @ObservedObject var userManager = UserManager()
     
     var searchResults: [Store] {
         if searchText.isEmpty {
@@ -28,11 +32,12 @@ struct ContentView: View {
     
     var body: some View {
         TabView{
+            //Home page
             NavigationStack{
                 List {
                     ForEach(searchResults, id: \.self) { store in
                         
-                        NavigationLink(destination: StoreView(store: store)){
+                        NavigationLink(destination: StoreView(store: store, userManager: userManager)){
                             RowView(store: store)
                             
                         }
@@ -48,13 +53,16 @@ struct ContentView: View {
             }
             .onAppear(){
                 listenToFirestore()
+                userManager.getUser()
+                
             }
+            //Search page
             NavigationStack {
                 if (searchText != ""){
                     List {
                         ForEach(searchResults, id: \.self) { store in
                             
-                            NavigationLink(destination: StoreView(store: store)){
+                            NavigationLink(destination: StoreView(store: store, userManager: userManager)){
                                 RowView(store: store)
                             }
                         }
@@ -71,22 +79,67 @@ struct ContentView: View {
             .onAppear(){
                 listenToFirestore()
             }
-            
-            Text("shopping cart")
-                .tabItem {
-                    Image(systemName: "bag.fill")
-                    Text("Cart")
-                }
-            
+            //shopping cart page
             NavigationStack{
-                //SignUpView()
-                SignInView()
+                Text("Your cart is empty!")
+                
+                
+                if let user = userManager.user {
+                    if let order = user.activeOrder {
+                        
+                        List {
+                            ForEach(order.bouquets) { bouquet in
+                                HStack {
+                                    VStack(alignment: .leading) {
+                                        Text(bouquet.name)
+                                        Text("\(bouquet.price)kr")
+                                    }
+                                    Spacer()
+                                    
+                                }
+                            }
+                        }
+                        Button(action: {
+                            let date = Date()
+                            let dateFormatter = DateFormatter()
+                            dateFormatter.dateFormat = "dd/MM/yyyy"
+                            let dateString = dateFormatter.string(from: date)
+                            order.date = dateString
+                            user.orders.append(order)
+                            user.activeOrder = nil
+                            userManager.saveUserToFirestore()
+                        }) {
+                            Text("Buy")
+                        }
+                    }
+                }
+              
+            }
+            .tabItem {
+                Image(systemName: "bag.fill")
+                Text("Cart")
+            }
+            .onAppear(){
+                userManager.getUser()
                 
             }
-                .tabItem {
-                    Image(systemName: "person.fill")
-                    Text("Account")
+         
+            //Account page
+            NavigationStack{
+                if userManager.user != nil {
+                    AccountView(userManager: userManager)
+                } else {
+                    SignInView(userManager: userManager)
                 }
+            }
+            .tabItem {
+                Image(systemName: "person.fill")
+                Text("Account")
+            }
+            
+            .onAppear(){
+                userManager.getUser()
+            }
         }
     }
     
@@ -129,6 +182,7 @@ struct ContentView: View {
             }
         }
     }
+    
 }
 
 struct SignUpView : View {
@@ -136,16 +190,17 @@ struct SignUpView : View {
     @State private var name: String = ""
     @State private var number: String = ""
     @State private var password: String = ""
-    @State var loggedIn = false
     @State var signIn = false
-    @State private var user: User? = nil
+    @ObservedObject var userManager: UserManager
+   // @State var user : User?
+    
     
     var body: some View {
         
-        if loggedIn {
-            AccountView()
+        if userManager.user != nil {
+            AccountView(userManager: userManager)
         } else if signIn {
-            SignInView()
+            SignInView(userManager: userManager)
         } else{
             VStack {
                 Spacer()
@@ -187,9 +242,9 @@ struct SignUpView : View {
             if let error = error {
                 print("Error signing up \(error)")
             } else {
-                let user = User(name: self.name, phoneNumber: self.number, email: self.email)
+                let newUser = User(name: self.name, phoneNumber: self.number, email: self.email)
                 print("Sign up succesful")
-                let userData = try! JSONEncoder().encode(user)
+                let userData = try! JSONEncoder().encode(newUser)
                 let userDictionary = try! JSONSerialization.jsonObject(with: userData, options: []) as! [String: Any]
                 
                 let db = Firestore.firestore()
@@ -198,7 +253,7 @@ struct SignUpView : View {
                     if let error = error {
                         print("Error saving  \(error)")
                     } else {
-                        loggedIn = true
+                        userManager.user = newUser
                         print("Saving user to db successful")
                     }
                 }
@@ -213,14 +268,15 @@ struct SignInView : View {
     @State private var password: String = ""
     @State var loggedIn = false
     @State var signUp = false
-    @State private var user: User? = nil
+   // @State private var user: User? = nil
+    @ObservedObject var userManager: UserManager
     
     var body: some View {
         if loggedIn {
-            AccountView()
+            AccountView(userManager: userManager)
         }
         else if signUp {
-            SignUpView()
+            SignUpView(userManager: userManager)
         }
             else {
             VStack {
@@ -258,74 +314,105 @@ struct SignInView : View {
                     print("Error logging in \(error)")
                 } else {
                     // Login successful
+                    userManager.getUser()
                     loggedIn = true
                 }
             }
         }
+    
 }
 
 struct AccountView : View {
-    @State private var user: User? = nil
-    @State var signedOut = false
+    @ObservedObject var userManager: UserManager
+    
     
     var body: some View {
         VStack{
-            if signedOut {
-                SignInView()
+            if userManager.user == nil {
+                SignInView(userManager: userManager)
             } else{
-                if let user = user {
-                    Text(user.name)
+                
+                Text(userManager.user!.name)
                         .font(.system(size: 36))
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding()
-                    Text(user.phoneNumber)
+                Text(userManager.user!.phoneNumber)
                         .font(.system(size: 16))
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .foregroundColor(.gray)
                         .padding()
                     
-                    
+                NavigationLink(destination: OrderListView(userManager: userManager)){
                     ItemView(img: "list.bullet.clipboard", text: "Beställningar")
+                }
+                    
                     ItemView(img: "dollarsign.square", text: "Betalning")
                     ItemView(img: "megaphone", text: "Kampanjer")
                     ItemView(img: "questionmark.circle", text: "Hjälp")
                     ItemView(img: "gearshape", text: "Inställningar")
                     Spacer()
                     Button(action: {
-                        try! Auth.auth().signOut()
-                        signedOut = true
+                        userManager.signOut()
                         print("sign out succeed")
                     }) { Text("Sign out")}
-                }
+                
             }
             
-        }
-        .onAppear() {
-            getUser()
         }
         Spacer()
     }
     
-    func getUser() {
-            guard let user = Auth.auth().currentUser else { return }
-            let db = Firestore.firestore()
-            let docRef = db.collection("users").document(user.uid)
-            
-            docRef.getDocument { (document, error) in
-                if let document = document, document.exists {
-                    let name = document.get("name") as? String ?? ""
-                    let email = document.get("email") as? String ?? ""
-                    let phoneNumber = document.get("phoneNumber") as? String ?? ""
-                    self.user = User(name: name, phoneNumber: phoneNumber, email: email)
-                } else {
-                    // Handle error
-                }
-            }
-        }
+    
     
     
     
 }
+
+struct OrderListView : View {
+    
+    @ObservedObject var userManager: UserManager
+    
+    var body: some View {
+        Text("Orderhistorik")
+            .font(.system(size: 20))
+        List{
+            if let user = userManager.user {
+                ForEach (user.orders) { order in
+                    NavigationLink(destination: OrderView(userManager: userManager, order: order)){
+                        Text(order.date)
+                    }
+                    
+                    
+                }
+            }
+           
+        }
+        .onAppear(){
+            userManager.getUser()
+        }
+    }
+}
+
+struct OrderView : View {
+    
+    @ObservedObject var userManager: UserManager
+    let order : Order
+    
+    var body: some View {
+        
+        List {
+            ForEach (order.bouquets) { bouq in
+                
+                    HStack{
+                        Text(bouq.name)
+                        Spacer()
+                        Text("\(bouq.price)")
+                    }
+            }
+        }
+    }
+}
+
 
 struct ItemView : View {
     
@@ -349,18 +436,37 @@ struct ItemView : View {
 struct StoreView : View {
     
     let store : Store
+    //let user : User?
+    @ObservedObject var userManager: UserManager
     
     var body: some View{
         VStack{
             Image(store.image)
                 .resizable()
                 .frame(width: 400, height: 240)
-            Text(store.name)
-            Text("\(store.deliveryFee)kr - " + store.deliveryTime)
+            HStack {
+                Text(store.name)
+                Text("\(store.deliveryFee)kr - " + store.deliveryTime)
+            }
+            NavigationLink(destination: MapView()) {
+                                Text("Visa på kartan")
+                            }
+
             List(store.bouquets) { bouq in
-                BouquetView(bouq: bouq)
+                BouquetView(userManager: userManager, bouq: bouq)
             }
         }
+    }
+}
+
+struct MapView: UIViewRepresentable {
+    func makeUIView(context: Context) -> GMSMapView {
+        let camera = GMSCameraPosition.camera(withLatitude: 37.7749, longitude: -122.4194, zoom: 11.0)
+        let mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
+        return mapView
+    }
+
+    func updateUIView(_ uiView: GMSMapView, context: Context) {
     }
 }
 
@@ -382,7 +488,11 @@ struct RowView: View {
 }
 
 struct BouquetView: View {
+    //let user: User?
+    @ObservedObject var userManager: UserManager
+  
     let bouq : Bouquet
+    
     
     var body: some View {
         HStack{
@@ -391,12 +501,35 @@ struct BouquetView: View {
                 Text("\(bouq.price)")
             }
             Spacer()
-            Image(bouq.image)
-                .resizable()
-                .frame(width: 80, height: 80)
+            VStack{
+                Image(bouq.image)
+                    .resizable()
+                    .frame(width: 80, height: 80)
+                Button(action: {
+                    
+                    if let user = userManager.user{
+                        
+                        if let order = user.activeOrder {
+                            order.addBouquet(bouq)
+                            print("adding bouq to existing order")
+                        }
+                            else {
+                                //create new order and add bouquet and add order to user
+                                let newOrder = Order(bouquets: [], date: "")
+                                newOrder.addBouquet(bouq)
+                                user.activeOrder = newOrder
+                                print("creating new order")
+                                
+                            }
+                        userManager.saveUserToFirestore()
+                    }
+                    
+                }) { Text("Buy")}
+            }
         }
     }
 }
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

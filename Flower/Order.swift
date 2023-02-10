@@ -7,7 +7,19 @@
 
 import Foundation
 
-struct Order {
+class Order : Codable, Identifiable {
     
-    var order : [Bouquet]
+    let id = UUID()
+    var bouquets : [Bouquet]
+    var date : String
+    
+    init(bouquets: [Bouquet] = [], date: String = "") {
+        self.bouquets = bouquets
+        self.date = date
+    }
+        
+    func addBouquet(_ bouq : Bouquet) {
+        bouquets.append(bouq)
+    }
+    
 }
