@@ -145,9 +145,9 @@ struct ContentView: View {
     
     
     
-    func saveToFirestore (_ storeName : String, _ fee: Int, _ time : String, _ img: String, _ bouquets: [Bouquet]) {
+    func saveToFirestore (_ storeName : String, _ fee: Int, _ time : String, _ img: String, _ bouquets: [Bouquet], _ latitude : Double, _ longitude : Double) {
         let db = Firestore.firestore()
-        let store = Store(name: storeName, deliveryFee: fee, deliveryTime: time, image: img, bouquets: bouquets )
+        let store = Store(name: storeName, deliveryFee: fee, deliveryTime: time, image: img, bouquets: bouquets, latitude: latitude, longitude: longitude)
         
         do {
             _ = try db.collection("stores").addDocument(from: store)
@@ -462,8 +462,22 @@ struct StoreView : View {
 struct MapView: UIViewRepresentable {
     func makeUIView(context: Context) -> GMSMapView {
         let camera = GMSCameraPosition.camera(withLatitude: 37.7749, longitude: -122.4194, zoom: 11.0)
-        let mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
-        return mapView
+                let mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
+
+                let marker = GMSMarker()
+                marker.position = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
+                marker.title = "San Francisco"
+                marker.snippet = "California"
+                marker.map = mapView
+        
+//        for store in stores {
+//                    let marker = GMSMarker()
+//                    marker.position = CLLocationCoordinate2D(latitude: store.latitude, longitude: store.longitude)
+//                    marker.title = store.name
+//                    marker.map = mapView
+//                }
+
+                return mapView
     }
 
     func updateUIView(_ uiView: GMSMapView, context: Context) {

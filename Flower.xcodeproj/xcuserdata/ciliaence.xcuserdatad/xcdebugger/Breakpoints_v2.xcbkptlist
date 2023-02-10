@@ -17,53 +17,5 @@
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "137C3340-CA46-4A40-AA9C-3512EAB711CF"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Flower/ContentView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "162"
-            endingLineNumber = "162"
-            landmarkName = "listenToFirestore()"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "137C3340-CA46-4A40-AA9C-3512EAB711CF - fcaa7fd2d4637fe1"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Flower.ContentView.listenToFirestore() -&gt; ()"
-                  moduleName = "Flower"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ciliaence/Desktop/Flower/Flower/ContentView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "162"
-                  endingLineNumber = "162"
-                  offsetFromSymbolStart = "74">
-               </Location>
-               <Location
-                  uuid = "137C3340-CA46-4A40-AA9C-3512EAB711CF - 1ddb4669066c7939"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in Flower.ContentView.listenToFirestore() -&gt; ()"
-                  moduleName = "Flower"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ciliaence/Desktop/Flower/Flower/ContentView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "163"
-                  endingLineNumber = "163"
-                  offsetFromSymbolStart = "247">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

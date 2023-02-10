@@ -17,6 +17,8 @@ struct Store : Identifiable, Codable, Hashable {
     var deliveryTime : String
     var image : String
     var bouquets : [Bouquet]
+    var latitude : Double
+    var longitude : Double
     
     static func == (lhs: Store, rhs: Store) -> Bool {
         return lhs.id == rhs.id
