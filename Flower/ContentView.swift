@@ -156,6 +156,7 @@ struct ContentView: View {
             print("Could not save to firestore")
         }
     }
+  
     
     func listenToFirestore() {
         let db = Firestore.firestore()
@@ -448,7 +449,7 @@ struct StoreView : View {
                 Text(store.name)
                 Text("\(store.deliveryFee)kr - " + store.deliveryTime)
             }
-            NavigationLink(destination: MapView()) {
+            NavigationLink(destination: MapView(store: store)) {
                                 Text("Visa på kartan")
                             }
 
@@ -459,28 +460,73 @@ struct StoreView : View {
     }
 }
 
-struct MapView: UIViewRepresentable {
-    func makeUIView(context: Context) -> GMSMapView {
-        let camera = GMSCameraPosition.camera(withLatitude: 37.7749, longitude: -122.4194, zoom: 11.0)
-                let mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
+import MapKit
 
-                let marker = GMSMarker()
-                marker.position = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
-                marker.title = "San Francisco"
-                marker.snippet = "California"
-                marker.map = mapView
-        
-//        for store in stores {
-//                    let marker = GMSMarker()
-//                    marker.position = CLLocationCoordinate2D(latitude: store.latitude, longitude: store.longitude)
-//                    marker.title = store.name
-//                    marker.map = mapView
-//                }
-
-                return mapView
+struct MapView : View {
+    
+    var locationManager = LocationManager()
+    
+    @StateObject var stores = Stores()
+    let store : Store
+    @State var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 59.302874, longitude: 18.028978), span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02))
+    
+    var body : some View {
+        VStack{
+            Map(coordinateRegion: $region,
+                interactionModes: [.all],
+                showsUserLocation: true,
+                userTrackingMode: .constant(.follow),
+                annotationItems: stores.list) { store in
+                
+                MapAnnotation(coordinate: store.coordinate, anchorPoint: CGPoint(x: 0.5, y: 0.5)) {
+                    MapPinView(store: store)
+                }
+                
+            }
+        }
+        .onAppear() {
+            listenToFirestore()
+        }
     }
+    
+    func listenToFirestore() {
+        let db = Firestore.firestore()
+        
+        db.collection("stores").addSnapshotListener { snapshot, err in
+            guard let snapshot = snapshot else{return}
+            
+            if let err = err {
+                print("Error getting document \(err)")
+            } else {
+                stores.list.removeAll()
+                for document in snapshot.documents {
+                    
+                    let result = Result {
+                        try document.data(as: Store.self)
+                    }
+                    switch result {
+                    case .success(let store) :
+                        stores.list.append(store)
+                        print ("Success decoding store")
+                    case .failure(let error) :
+                        print ("Error decoding store: \(error)")
+                    }
+                }
+            }
+        }
+    }
+}
 
-    func updateUIView(_ uiView: GMSMapView, context: Context) {
+struct MapPinView: View {
+    
+    var store : Store
+    var body: some View {
+        VStack {
+            Image(systemName: "house.fill")
+                .resizable()
+                .frame(width: 30, height: 30)
+            Text(store.name)
+        }
     }
 }
 
