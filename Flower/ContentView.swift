@@ -437,7 +437,6 @@ struct ItemView : View {
 struct StoreView : View {
     
     let store : Store
-    //let user : User?
     @ObservedObject var userManager: UserManager
     
     var body: some View{
@@ -464,30 +463,39 @@ import MapKit
 
 struct MapView : View {
     
-    var locationManager = LocationManager()
+    @State var locationManager = LocationManager()
     
     @StateObject var stores = Stores()
     let store : Store
-    @State var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 59.302874, longitude: 18.028978), span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02))
     
+  //  @State var region = MKCoordinateRegion()
+   
     var body : some View {
         VStack{
-            Map(coordinateRegion: $region,
+            
+            Map(coordinateRegion: $locationManager.region,
                 interactionModes: [.all],
                 showsUserLocation: true,
                 userTrackingMode: .constant(.follow),
-                annotationItems: stores.list) { store in
+                annotationItems: stores.list)
+             { store in
                 
                 MapAnnotation(coordinate: store.coordinate, anchorPoint: CGPoint(x: 0.5, y: 0.5)) {
                     MapPinView(store: store)
                 }
-                
             }
+             .tint(Color(.systemBlue))
         }
         .onAppear() {
             listenToFirestore()
+            locationManager.setRegion(store: store)
+            locationManager.requestLocationPermission()
         }
     }
+    
+    
+    
+    
     
     func listenToFirestore() {
         let db = Firestore.firestore()
@@ -522,10 +530,20 @@ struct MapPinView: View {
     var store : Store
     var body: some View {
         VStack {
-            Image(systemName: "house.fill")
-                .resizable()
-                .frame(width: 30, height: 30)
             Text(store.name)
+                .font(.callout)
+                        .padding(5)
+                        .background(Color(.white))
+                        .cornerRadius(10)
+            Image(systemName: "mappin.circle.fill")
+                    .font(.title)
+                    .foregroundColor(.red)
+                  
+                  Image(systemName: "arrowtriangle.down.fill")
+                    .font(.caption)
+                    .foregroundColor(.red)
+                    .offset(x: 0, y: -5)
+            
         }
     }
 }
