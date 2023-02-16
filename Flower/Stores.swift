@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Stores : ObservableObject {
+class Stores : ObservableObject, Identifiable {
     
     @Published var list = [Store]()
 }

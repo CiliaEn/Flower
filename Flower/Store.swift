@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseFirestoreSwift
+import CoreLocation
 
 struct Store : Identifiable, Codable, Hashable {
    
@@ -19,6 +20,10 @@ struct Store : Identifiable, Codable, Hashable {
     var bouquets : [Bouquet]
     var latitude : Double
     var longitude : Double
+    
+    var coordinate : CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
     
     static func == (lhs: Store, rhs: Store) -> Bool {
         return lhs.id == rhs.id
