@@ -15,18 +15,17 @@ import GoogleMaps
 
 struct ContentView: View {
     
-    @StateObject var stores = Stores()
+   // @StateObject var stores = Stores()
     @State private var searchText = ""
-   // @ObservedObject private var user: User
-   // @State var activeOrder = Order()
    
     @ObservedObject var userManager = UserManager()
+    @ObservedObject var firestoreManager = FirestoreManager()
     
     var searchResults: [Store] {
         if searchText.isEmpty {
-            return stores.list
+            return firestoreManager.stores.list
         } else {
-            return stores.list.filter { $0.name.contains(searchText) }
+            return firestoreManager.stores.list.filter { $0.name.contains(searchText) }
         }
     }
     
@@ -52,7 +51,7 @@ struct ContentView: View {
                 Text("Home")
             }
             .onAppear(){
-                listenToFirestore()
+                firestoreManager.listenToFirestore()
                 userManager.getUser()
                 
             }
@@ -68,7 +67,7 @@ struct ContentView: View {
                         }
                     }
                 } else {
-                    SearchView()
+                    SearchView(userManager: userManager)
                 }
             }
             .searchable(text: $searchText)
@@ -77,7 +76,7 @@ struct ContentView: View {
                 Text("Search")
             }
             .onAppear(){
-                listenToFirestore()
+                firestoreManager.listenToFirestore()
             }
             //shopping cart page
             NavigationStack{
@@ -142,48 +141,7 @@ struct ContentView: View {
             }
         }
     }
-    
-    
-    
-    func saveToFirestore (_ storeName : String, _ fee: Int, _ time : String, _ img: String, _ bouquets: [Bouquet], _ latitude : Double, _ longitude : Double) {
-        let db = Firestore.firestore()
-        let store = Store(name: storeName, deliveryFee: fee, deliveryTime: time, image: img, bouquets: bouquets, latitude: latitude, longitude: longitude)
-        
-        do {
-            _ = try db.collection("stores").addDocument(from: store)
-        }
-        catch {
-            print("Could not save to firestore")
-        }
-    }
-  
-    
-    func listenToFirestore() {
-        let db = Firestore.firestore()
-        
-        db.collection("stores").addSnapshotListener { snapshot, err in
-            guard let snapshot = snapshot else{return}
-            
-            if let err = err {
-                print("Error getting document \(err)")
-            } else {
-                stores.list.removeAll()
-                for document in snapshot.documents {
-                    
-                    let result = Result {
-                        try document.data(as: Store.self)
-                    }
-                    switch result {
-                    case .success(let store) :
-                        stores.list.append(store)
-                    case .failure(let error) :
-                        print ("Error decoding store: \(error)")
-                    }
-                }
-            }
-        }
-    }
-    
+     
 }
 
 struct SignUpView : View {
@@ -269,7 +227,6 @@ struct SignInView : View {
     @State private var password: String = ""
     @State var loggedIn = false
     @State var signUp = false
-   // @State private var user: User? = nil
     @ObservedObject var userManager: UserManager
     
     var body: some View {
@@ -362,11 +319,6 @@ struct AccountView : View {
         }
         Spacer()
     }
-    
-    
-    
-    
-    
 }
 
 struct OrderListView : View {
@@ -382,11 +334,8 @@ struct OrderListView : View {
                     NavigationLink(destination: OrderView(userManager: userManager, order: order)){
                         Text(order.date)
                     }
-                    
-                    
                 }
             }
-           
         }
         .onAppear(){
             userManager.getUser()
@@ -453,7 +402,7 @@ struct StoreView : View {
                             }
 
             List(store.bouquets) { bouq in
-                BouquetView(userManager: userManager, bouq: bouq)
+                BouquetView(userManager: userManager, bouq: bouq, store: store)
             }
         }
     }
@@ -463,22 +412,24 @@ import MapKit
 
 struct MapView : View {
     
-    @State var locationManager = LocationManager()
+    @ObservedObject var locationManager = LocationManager()
+    @ObservedObject var firestoreManager = FirestoreManager()
     
-    @StateObject var stores = Stores()
+  //  @StateObject var stores = Stores()
+    
     let store : Store
     
-  //  @State var region = MKCoordinateRegion()
+    @State var region = MKCoordinateRegion()
+    @State private var userTrackingMode = MapUserTrackingMode.none
    
     var body : some View {
         VStack{
             
-            Map(coordinateRegion: $locationManager.region,
+            Map(coordinateRegion: $region,
                 interactionModes: [.all],
                 showsUserLocation: true,
-                userTrackingMode: .constant(.follow),
-                annotationItems: stores.list)
-             { store in
+                userTrackingMode: $userTrackingMode,
+                annotationItems: firestoreManager.stores.list) { store in
                 
                 MapAnnotation(coordinate: store.coordinate, anchorPoint: CGPoint(x: 0.5, y: 0.5)) {
                     MapPinView(store: store)
@@ -487,41 +438,31 @@ struct MapView : View {
              .tint(Color(.systemBlue))
         }
         .onAppear() {
-            listenToFirestore()
-            locationManager.setRegion(store: store)
+            firestoreManager.listenToFirestore()
+            userTrackingMode = .none
             locationManager.requestLocationPermission()
+            setRegion(store: store)
         }
+        .overlay(
+                        Button(action: {
+                            userTrackingMode = .follow
+                        }) {
+                            Image(systemName: "location")
+                                .font(.title)
+                                .padding()
+                                .background(Color.white)
+                                .clipShape(Circle())
+                        }
+                        .padding(.trailing)
+                        .padding(.bottom, 40),
+                        alignment: .bottomTrailing
+                    )
+            
     }
     
-    
-    
-    
-    
-    func listenToFirestore() {
-        let db = Firestore.firestore()
-        
-        db.collection("stores").addSnapshotListener { snapshot, err in
-            guard let snapshot = snapshot else{return}
-            
-            if let err = err {
-                print("Error getting document \(err)")
-            } else {
-                stores.list.removeAll()
-                for document in snapshot.documents {
-                    
-                    let result = Result {
-                        try document.data(as: Store.self)
-                    }
-                    switch result {
-                    case .success(let store) :
-                        stores.list.append(store)
-                        print ("Success decoding store")
-                    case .failure(let error) :
-                        print ("Error decoding store: \(error)")
-                    }
-                }
-            }
-        }
+    func setRegion(store: Store) {
+        region = MKCoordinateRegion(center: store.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+        print("hejhopp")
     }
 }
 
@@ -566,10 +507,11 @@ struct RowView: View {
 }
 
 struct BouquetView: View {
-    //let user: User?
+
     @ObservedObject var userManager: UserManager
   
     let bouq : Bouquet
+    let store : Store
     
     
     var body: some View {
@@ -593,7 +535,7 @@ struct BouquetView: View {
                         }
                             else {
                                 //create new order and add bouquet and add order to user
-                                let newOrder = Order(bouquets: [], date: "")
+                                let newOrder = Order(storeName: store.name, bouquets: [], date: "")
                                 newOrder.addBouquet(bouq)
                                 user.activeOrder = newOrder
                                 print("creating new order")
@@ -611,78 +553,61 @@ struct BouquetView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        SearchView()
+        ContentView()
     }
 }
 
 struct SearchView: View {
+    
+    let userManager : UserManager
+    
     var body: some View {
         VStack{
             HStack{
-                ZStack{
-                    Image("offers")
-                        .resizable()
-                        .frame(width: 180, height: 160)
-                    VStack{
-                        Image(systemName: "percent")
-                            .resizable()
-                            .frame(width: 50, height: 48)
-                        
-                        Text("Kampanjer")
-                            .font(.system (size: 20))
-                           
-                    }
-                }
-                ZStack{
-                    Image("near")
-                        .resizable()
-                        .frame(width: 180, height: 160)
-                    VStack{
-                        Image(systemName: "mappin.and.ellipse")
-                            .resizable()
-                            .frame(width: 50, height: 55)
-                        
-                        Text("Nära mig")
-                            .font(.system (size: 20))
-                           
-                    }
-                }
+                FastSearchView(colour: "offers", img: "percent", text: "Kampanjer")
+                FastSearchView(colour: "near", img: "mappin.and.ellipse", text: "Nära mig")
             }
             HStack{
-                ZStack{
-                    Image("fast")
-                        .resizable()
-                        .frame(width: 180, height: 160)
-                    VStack{
-                        Image(systemName: "box.truck.badge.clock")
-                            .resizable()
-                            .frame(width: 65, height: 50)
-                        
-                        Text("Snabb leverans")
-                            .font(.system (size: 20))
-                           
-                    }
-                }
-                ZStack{
-                    Image("best")
-                        .resizable()
-                        .frame(width: 180, height: 160)
-                    VStack{
-                        Image(systemName: "medal")
-                            .resizable()
-                            .frame(width: 50, height: 55)
-                        
-                        Text("Bäst omdömen")
-                            .font(.system (size: 20))
-                           
-                    }
-                }
-
+                FastSearchView(colour: "fast", img: "box.truck.badge.clock", text: "Snabb leverans")
+               
+                FastSearchView(colour: "best", img: "medal", text: "Bäst omdömen")
             }
             Text("Mina beställningar")
                 .font(.system (size: 20))
-            
+            List{
+                if let user = userManager.user {
+                    ForEach(user.orders) { order in
+                        Text(order.storeName)
+                       
+                    }
+
+                }
+            }
             Spacer()
+        }
+    }
+}
+
+struct FastSearchView: View {
+    
+    let colour : String
+    let img : String
+    let text : String
+    
+    var body: some View {
+        ZStack{
+            Image(colour)
+                .resizable()
+                .frame(width: 180, height: 160)
+                .cornerRadius(10)
+            VStack{
+                Image(systemName: img)
+                    .resizable()
+                    .frame(width: 50, height: 48)
+                Text(text)
+                    .font(.system (size: 20))
+                
+            }
         }
     }
 }

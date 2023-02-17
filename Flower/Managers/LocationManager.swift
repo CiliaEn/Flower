@@ -15,7 +15,7 @@ class LocationManager : NSObject, CLLocationManagerDelegate, ObservableObject {
      
     private let manager = CLLocationManager()
     
-  @Published var region = MKCoordinateRegion()
+ //   var region = MKCoordinateRegion()
     
     override init() {
            super.init()
@@ -38,9 +38,7 @@ class LocationManager : NSObject, CLLocationManagerDelegate, ObservableObject {
         manager.startUpdatingLocation()
     }
     
-    func setRegion(store: Store) {
-        region = MKCoordinateRegion(center: store.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
-    }
+    
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         location = locations.first?.coordinate
