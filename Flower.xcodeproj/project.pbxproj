@@ -59,7 +59,7 @@
 		7482DDA5299FA6AD003009E9 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7482DDA4299FA6AD003009E9 /* SearchView.swift */; };
 		7482DDA7299FA709003009E9 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7482DDA6299FA709003009E9 /* AccountView.swift */; };
 		7482DDA9299FA730003009E9 /* ShoppingCartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7482DDA8299FA730003009E9 /* ShoppingCartView.swift */; };
-		7482DDAB299FA7BB003009E9 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7482DDAA299FA7BB003009E9 /* HomeView.swift */; };
+		7482DDAB299FA7BB003009E9 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7482DDAA299FA7BB003009E9 /* MapView.swift */; };
 		7482DDAD299FAA93003009E9 /* StoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7482DDAC299FAA93003009E9 /* StoreView.swift */; };
 		74905123298297D3000046C2 /* Bouquet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74905122298297D3000046C2 /* Bouquet.swift */; };
 		749051252984077B000046C2 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749051242984077B000046C2 /* User.swift */; };
@@ -123,7 +123,7 @@
 		7482DDA4299FA6AD003009E9 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		7482DDA6299FA709003009E9 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
 		7482DDA8299FA730003009E9 /* ShoppingCartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingCartView.swift; sourceTree = "<group>"; };
-		7482DDAA299FA7BB003009E9 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		7482DDAA299FA7BB003009E9 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		7482DDAC299FAA93003009E9 /* StoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreView.swift; sourceTree = "<group>"; };
 		74905122298297D3000046C2 /* Bouquet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bouquet.swift; sourceTree = "<group>"; };
 		749051242984077B000046C2 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -304,7 +304,7 @@
 				7482DDA4299FA6AD003009E9 /* SearchView.swift */,
 				7482DDA6299FA709003009E9 /* AccountView.swift */,
 				7482DDA8299FA730003009E9 /* ShoppingCartView.swift */,
-				7482DDAA299FA7BB003009E9 /* HomeView.swift */,
+				7482DDAA299FA7BB003009E9 /* MapView.swift */,
 				7482DDAC299FAA93003009E9 /* StoreView.swift */,
 			);
 			path = Views;
@@ -459,7 +459,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7482DDA7299FA709003009E9 /* AccountView.swift in Sources */,
-				7482DDAB299FA7BB003009E9 /* HomeView.swift in Sources */,
+				7482DDAB299FA7BB003009E9 /* MapView.swift in Sources */,
 				74029D452981399800DDC42B /* Store.swift in Sources */,
 				7482DDA2299FA0B0003009E9 /* FirestoreManager.swift in Sources */,
 				74029D082981244F00DDC42B /* ContentView.swift in Sources */,

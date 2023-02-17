@@ -79,38 +79,7 @@ struct ContentView: View {
             
             //shopping cart page
             NavigationStack{
-                
-                if let user = userManager.user {
-                    if let order = user.activeOrder {
-                        
-                        List {
-                            ForEach(order.bouquets) { bouquet in
-                                HStack {
-                                    VStack(alignment: .leading) {
-                                        Text(bouquet.name)
-                                        Text("\(bouquet.price)kr")
-                                    }
-                                    Spacer()
-                                }
-                            }
-                        }
-                        Button(action: {
-                            let date = Date()
-                            let dateFormatter = DateFormatter()
-                            dateFormatter.dateFormat = "dd/MM/yyyy"
-                            let dateString = dateFormatter.string(from: date)
-                            order.date = dateString
-                            user.orders.append(order)
-                            user.activeOrder = nil
-                            userManager.saveUserToFirestore()
-                        }) {
-                            Text("Buy")
-                        }
-                    } else{
-                        Text("Your cart is empty!")
-                    }
-                }
-                
+                ShoppingCartView(userManager: userManager)
             }
             .tabItem {
                 Image(systemName: "bag.fill")
@@ -161,5 +130,7 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
+
 
 

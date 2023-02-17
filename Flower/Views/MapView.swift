@@ -17,7 +17,7 @@ struct MapView : View {
     
     @State var region = MKCoordinateRegion()
     @State private var userTrackingMode = MapUserTrackingMode.none
-   
+    
     var body : some View {
         VStack{
             
@@ -31,7 +31,7 @@ struct MapView : View {
                     MapPinView(store: store)
                 }
             }
-             .tint(Color(.systemBlue))
+                .tint(Color(.systemBlue))
         }
         .onAppear() {
             firestoreManager.listenToFirestore()
@@ -40,20 +40,20 @@ struct MapView : View {
             setRegion(store: store)
         }
         .overlay(
-                        Button(action: {
-                            userTrackingMode = .follow
-                        }) {
-                            Image(systemName: "location")
-                                .font(.title)
-                                .padding()
-                                .background(Color.white)
-                                .clipShape(Circle())
-                        }
-                        .padding(.trailing)
-                        .padding(.bottom, 40),
-                        alignment: .bottomTrailing
-                    )
-            
+            Button(action: {
+                userTrackingMode = .follow
+            }) {
+                Image(systemName: "location")
+                    .font(.title)
+                    .padding()
+                    .background(Color.white)
+                    .clipShape(Circle())
+            }
+                .padding(.trailing)
+                .padding(.bottom, 40),
+            alignment: .bottomTrailing
+        )
+        
     }
     
     func setRegion(store: Store) {
@@ -69,17 +69,17 @@ struct MapPinView: View {
         VStack {
             Text(store.name)
                 .font(.callout)
-                        .padding(5)
-                        .background(Color(.white))
-                        .cornerRadius(10)
+                .padding(5)
+                .background(Color(.white))
+                .cornerRadius(10)
             Image(systemName: "mappin.circle.fill")
-                    .font(.title)
-                    .foregroundColor(.red)
-                  
-                  Image(systemName: "arrowtriangle.down.fill")
-                    .font(.caption)
-                    .foregroundColor(.red)
-                    .offset(x: 0, y: -5)
+                .font(.title)
+                .foregroundColor(.red)
+            
+            Image(systemName: "arrowtriangle.down.fill")
+                .font(.caption)
+                .foregroundColor(.red)
+                .offset(x: 0, y: -5)
             
         }
     }
