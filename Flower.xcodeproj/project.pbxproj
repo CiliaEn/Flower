@@ -56,6 +56,11 @@
 		74147E7F29966516009D4710 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74147E7E29966516009D4710 /* SystemConfiguration.framework */; };
 		74147E812996651C009D4710 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74147E802996651C009D4710 /* UIKit.framework */; };
 		7482DDA2299FA0B0003009E9 /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7482DDA1299FA0B0003009E9 /* FirestoreManager.swift */; };
+		7482DDA5299FA6AD003009E9 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7482DDA4299FA6AD003009E9 /* SearchView.swift */; };
+		7482DDA7299FA709003009E9 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7482DDA6299FA709003009E9 /* AccountView.swift */; };
+		7482DDA9299FA730003009E9 /* ShoppingCartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7482DDA8299FA730003009E9 /* ShoppingCartView.swift */; };
+		7482DDAB299FA7BB003009E9 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7482DDAA299FA7BB003009E9 /* HomeView.swift */; };
+		7482DDAD299FAA93003009E9 /* StoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7482DDAC299FAA93003009E9 /* StoreView.swift */; };
 		74905123298297D3000046C2 /* Bouquet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74905122298297D3000046C2 /* Bouquet.swift */; };
 		749051252984077B000046C2 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749051242984077B000046C2 /* User.swift */; };
 		749051272984080E000046C2 /* Order.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749051262984080E000046C2 /* Order.swift */; };
@@ -115,6 +120,11 @@
 		74147E7E29966516009D4710 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		74147E802996651C009D4710 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		7482DDA1299FA0B0003009E9 /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
+		7482DDA4299FA6AD003009E9 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
+		7482DDA6299FA709003009E9 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
+		7482DDA8299FA730003009E9 /* ShoppingCartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingCartView.swift; sourceTree = "<group>"; };
+		7482DDAA299FA7BB003009E9 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		7482DDAC299FAA93003009E9 /* StoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreView.swift; sourceTree = "<group>"; };
 		74905122298297D3000046C2 /* Bouquet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bouquet.swift; sourceTree = "<group>"; };
 		749051242984077B000046C2 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		749051262984080E000046C2 /* Order.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Order.swift; sourceTree = "<group>"; };
@@ -206,10 +216,10 @@
 		74029D042981244F00DDC42B /* Flower */ = {
 			isa = PBXGroup;
 			children = (
+				7482DDA3299FA64B003009E9 /* Views */,
 				7482DDA0299FA06E003009E9 /* Managers */,
 				7482DD9F299FA048003009E9 /* Classes & structs */,
 				74029D4A29816AC900DDC42B /* Info.plist */,
-				74029D072981244F00DDC42B /* ContentView.swift */,
 				74029D052981244F00DDC42B /* FlowerApp.swift */,
 				74029D092981245200DDC42B /* Assets.xcassets */,
 				74029D482981694800DDC42B /* GoogleService-Info.plist */,
@@ -285,6 +295,19 @@
 				7482DDA1299FA0B0003009E9 /* FirestoreManager.swift */,
 			);
 			path = Managers;
+			sourceTree = "<group>";
+		};
+		7482DDA3299FA64B003009E9 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				74029D072981244F00DDC42B /* ContentView.swift */,
+				7482DDA4299FA6AD003009E9 /* SearchView.swift */,
+				7482DDA6299FA709003009E9 /* AccountView.swift */,
+				7482DDA8299FA730003009E9 /* ShoppingCartView.swift */,
+				7482DDAA299FA7BB003009E9 /* HomeView.swift */,
+				7482DDAC299FAA93003009E9 /* StoreView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -435,9 +458,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7482DDA7299FA709003009E9 /* AccountView.swift in Sources */,
+				7482DDAB299FA7BB003009E9 /* HomeView.swift in Sources */,
 				74029D452981399800DDC42B /* Store.swift in Sources */,
 				7482DDA2299FA0B0003009E9 /* FirestoreManager.swift in Sources */,
 				74029D082981244F00DDC42B /* ContentView.swift in Sources */,
+				7482DDA9299FA730003009E9 /* ShoppingCartView.swift in Sources */,
 				749051252984077B000046C2 /* User.swift in Sources */,
 				74905123298297D3000046C2 /* Bouquet.swift in Sources */,
 				74029D062981244F00DDC42B /* FlowerApp.swift in Sources */,
@@ -445,6 +471,8 @@
 				74147E52298C1D57009D4710 /* UserManager.swift in Sources */,
 				749051272984080E000046C2 /* Order.swift in Sources */,
 				74094FA5299B9DA600D3B876 /* LocationManager.swift in Sources */,
+				7482DDAD299FAA93003009E9 /* StoreView.swift in Sources */,
+				7482DDA5299FA6AD003009E9 /* SearchView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
