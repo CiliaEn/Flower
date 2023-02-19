@@ -16,14 +16,16 @@ struct StoreView : View {
         VStack{
             Image(store.image)
                 .resizable()
-                .frame(width: 400, height: 240)
+                .frame(width: 400, height: 200)
             HStack {
                 Text(store.name)
                 Text("\(store.deliveryFee)kr - " + store.deliveryTime)
             }
-            NavigationLink(destination: MapView(store: store)) {
-                                Text("Visa på kartan")
-                            }
+            NavigationLink(destination: {
+                            MapView(store: store)
+                        }) {
+                            Text("Visa på kartan")
+                        }
 
             List(store.bouquets) { bouq in
                 BouquetView(userManager: userManager, bouq: bouq, store: store)
@@ -65,7 +67,6 @@ struct BouquetView: View {
                                 newOrder.addBouquet(bouq)
                                 user.activeOrder = newOrder
                                 print("creating new order")
-                                
                             }
                         userManager.saveUserToFirestore()
                     }

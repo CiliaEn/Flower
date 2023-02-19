@@ -10,7 +10,7 @@ import FirebaseFirestore
 
 class FirestoreManager : ObservableObject {
     
-     @Published var stores = Stores()
+    @Published var stores = [Store]()
     
     func listenToFirestore() {
         let db = Firestore.firestore()
@@ -21,7 +21,7 @@ class FirestoreManager : ObservableObject {
             if let err = err {
                 print("Error getting document \(err)")
             } else {
-                self.stores.list.removeAll()
+                self.stores.removeAll()
                 for document in snapshot.documents {
                     
                     let result = Result {
@@ -29,7 +29,7 @@ class FirestoreManager : ObservableObject {
                     }
                     switch result {
                     case .success(let store) :
-                        self.stores.list.append(store)
+                        self.stores.append(store)
                     case .failure(let error) :
                         print ("Error decoding store: \(error)")
                     }

@@ -18,6 +18,7 @@ struct MapView : View {
     @State var region = MKCoordinateRegion()
     @State private var userTrackingMode = MapUserTrackingMode.none
     
+    
     var body : some View {
         VStack{
             
@@ -25,7 +26,7 @@ struct MapView : View {
                 interactionModes: [.all],
                 showsUserLocation: true,
                 userTrackingMode: $userTrackingMode,
-                annotationItems: firestoreManager.stores.list) { store in
+                annotationItems: firestoreManager.stores) { store in
                 
                 MapAnnotation(coordinate: store.coordinate, anchorPoint: CGPoint(x: 0.5, y: 0.5)) {
                     MapPinView(store: store)
@@ -35,9 +36,9 @@ struct MapView : View {
         }
         .onAppear() {
             firestoreManager.listenToFirestore()
-            userTrackingMode = .none
-            locationManager.requestLocationPermission()
             setRegion(store: store)
+            locationManager.requestLocationPermission()
+            
         }
         .overlay(
             Button(action: {
@@ -50,15 +51,11 @@ struct MapView : View {
                     .clipShape(Circle())
             }
                 .padding(.trailing)
-                .padding(.bottom, 40),
-            alignment: .bottomTrailing
-        )
-        
+                .padding(.bottom, 40), alignment: .bottomTrailing)
     }
     
     func setRegion(store: Store) {
         region = MKCoordinateRegion(center: store.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
-        print("hejhopp")
     }
 }
 

@@ -22,9 +22,9 @@ struct ContentView: View {
     
     var searchResults: [Store] {
         if searchText.isEmpty {
-            return firestoreManager.stores.list
+            return firestoreManager.stores
         } else {
-            return firestoreManager.stores.list.filter { $0.name.contains(searchText) }
+            return firestoreManager.stores.filter { $0.name.contains(searchText) }
         }
     }
     
