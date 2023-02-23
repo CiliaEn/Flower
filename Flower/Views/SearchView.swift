@@ -10,6 +10,7 @@ import SwiftUI
 struct SearchView: View {
     
     let userManager : UserManager
+    let firestoreManager : FirestoreManager
     
     var body: some View {
         VStack{
@@ -17,20 +18,36 @@ struct SearchView: View {
                 FastSearchView(colour: "offers", img: "percent", text: "Kampanjer")
                 FastSearchView(colour: "near", img: "mappin.and.ellipse", text: "Nära mig")
             }
+            .padding(.bottom, 1)
             HStack{
                 FastSearchView(colour: "fast", img: "box.truck.badge.clock", text: "Snabb leverans")
                
                 FastSearchView(colour: "best", img: "medal", text: "Bäst omdömen")
             }
-            Text("Mina beställningar")
-                .font(.system (size: 20))
+            HStack{
+                Text("Mina beställningar")
+                    .font(.custom("Avenir", size: 20))
+                    .padding(.leading, 16)
+                Spacer()
+            }
             List{
                 if let user = userManager.user {
                     ForEach(user.orders) { order in
-                        Text(order.storeName)
-                       
+                        
+                        ForEach(firestoreManager.stores) { store in
+                            if(store.name == order.storeName){
+                                NavigationLink(
+                                    destination: StoreView(store: store, userManager: userManager),
+                                    label: {
+                                        Image(store.image)
+                                            .resizable()
+                                        Text(store.name)
+                                            .font(.custom("Avenir", size: 16))
+                                    }
+                                )
+                            }
+                        }
                     }
-
                 }
             }
             Spacer()
@@ -55,7 +72,7 @@ struct FastSearchView: View {
                     .resizable()
                     .frame(width: 50, height: 48)
                 Text(text)
-                    .font(.system (size: 20))
+                    .font(.custom("Avenir", size: 20))
                 
             }
         }

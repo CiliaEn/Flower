@@ -14,6 +14,8 @@ struct ShoppingCartView: View {
     
     var body: some View {
         VStack{
+            Text("Shopping Cart")
+                            .font(.title)
             
             if let user = userManager.user {
                 if let order = user.activeOrder {
@@ -21,11 +23,12 @@ struct ShoppingCartView: View {
                     List {
                         ForEach(order.bouquets) { bouquet in
                             HStack {
-                                VStack(alignment: .leading) {
+                                    Text("x 1")
+                                
                                     Text(bouquet.name)
-                                    Text("\(bouquet.price)kr")
-                                }
                                 Spacer()
+                                    Text("\(bouquet.price)kr")
+                                
                             }
                         }
                     }
@@ -40,7 +43,15 @@ struct ShoppingCartView: View {
                         userManager.saveUserToFirestore()
                     }) {
                         Text("Buy")
+                            .font(.headline)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color(red: 0.86, green: 0.64, blue: 1.13))
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                            .padding(.horizontal)
                     }
+                    .padding(.top, 20)
                 }
                 else{
                     Text("Your cart is empty!")

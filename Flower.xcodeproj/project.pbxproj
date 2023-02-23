@@ -63,6 +63,7 @@
 		74905123298297D3000046C2 /* Bouquet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74905122298297D3000046C2 /* Bouquet.swift */; };
 		749051252984077B000046C2 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749051242984077B000046C2 /* User.swift */; };
 		749051272984080E000046C2 /* Order.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749051262984080E000046C2 /* Order.swift */; };
+		749D252329A39005002BFD92 /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749D252229A39005002BFD92 /* SplashScreenView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -126,6 +127,7 @@
 		74905122298297D3000046C2 /* Bouquet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bouquet.swift; sourceTree = "<group>"; };
 		749051242984077B000046C2 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		749051262984080E000046C2 /* Order.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Order.swift; sourceTree = "<group>"; };
+		749D252229A39005002BFD92 /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -303,6 +305,7 @@
 				7482DDA8299FA730003009E9 /* ShoppingCartView.swift */,
 				7482DDAA299FA7BB003009E9 /* MapView.swift */,
 				7482DDAC299FAA93003009E9 /* StoreView.swift */,
+				749D252229A39005002BFD92 /* SplashScreenView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -457,6 +460,7 @@
 			files = (
 				7482DDA7299FA709003009E9 /* AccountView.swift in Sources */,
 				7482DDAB299FA7BB003009E9 /* MapView.swift in Sources */,
+				749D252329A39005002BFD92 /* SplashScreenView.swift in Sources */,
 				74029D452981399800DDC42B /* Store.swift in Sources */,
 				7482DDA2299FA0B0003009E9 /* FirestoreManager.swift in Sources */,
 				74029D082981244F00DDC42B /* ContentView.swift in Sources */,

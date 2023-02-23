@@ -10,50 +10,47 @@ import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
 
-struct AccountView : View {
+struct AccountView: View {
     @ObservedObject var userManager: UserManager
     
-    
     var body: some View {
-        VStack{
+        VStack {
             if userManager.user == nil {
                 SignInView(userManager: userManager)
-            } else{
-                
+            } else {
                 Text(userManager.user!.name)
-                        .font(.system(size: 36))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding()
+                    .font(.system(size: 36, weight: .bold))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
                 Text(userManager.user!.phoneNumber)
-                        .font(.system(size: 16))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .foregroundColor(.gray)
-                        .padding()
-                    
+                    .font(.system(size: 16))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .foregroundColor(.gray)
+                    .padding()
+                
                 NavigationLink(destination: OrderListView(userManager: userManager)){
                     ItemView(img: "list.bullet.clipboard", text: "Beställningar")
                 }
-                    
-                    ItemView(img: "dollarsign.square", text: "Betalning")
-                    ItemView(img: "megaphone", text: "Kampanjer")
-                    ItemView(img: "questionmark.circle", text: "Hjälp")
-                    ItemView(img: "gearshape", text: "Inställningar")
-                    Spacer()
-                    Button(action: {
-                        userManager.signOut()
-                        print("sign out succeed")
-                    }) { Text("Sign out")}
                 
+                ItemView(img: "dollarsign.square", text: "Betalning")
+                ItemView(img: "megaphone", text: "Kampanjer")
+                ItemView(img: "questionmark.circle", text: "Hjälp")
+                ItemView(img: "gearshape", text: "Inställningar")
+                Spacer()
+                Button(action: {
+                    userManager.signOut()
+                    print("sign out succeed")
+                }) { Text("Sign out") }
+                .font(.system(size: 20, weight: .bold))
             }
-            
         }
+        .font(.custom("Avenir", size: 18))
         Spacer()
     }
 }
 
 
-struct SignInView : View {
-    
+struct SignInView: View {
     @State private var email: String = ""
     @State private var password: String = ""
     @State var loggedIn = false
@@ -63,11 +60,9 @@ struct SignInView : View {
     var body: some View {
         if loggedIn {
             AccountView(userManager: userManager)
-        }
-        else if signUp {
+        } else if signUp {
             SignUpView(userManager: userManager)
-        }
-            else {
+        } else {
             VStack {
                 Spacer()
                 TextField("Email", text: $email)
@@ -81,33 +76,35 @@ struct SignInView : View {
                     .padding(.bottom, 20)
                 
                 Button(action: login) {
-                    Text("Login")
+                    Text("LOG IN")
                 }
                 .buttonStyle(.bordered)
                 .tint(.accentColor)
-                .font(.system(size: 20))
+                .font(.custom("Avenir-bold", size: 20))
                 .foregroundColor(.blue)
                 .padding()
-                    Text("Create an account")
+                
+                Text("Create an account")
                     .onTapGesture {
                         signUp = true
                     }
                 Spacer()
-                
             }
+            .font(.custom("Avenir", size: 18))
         }
-       }
+    }
+    
     func login() {
-            Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
-                if let error = error {
-                    print("Error logging in \(error)")
-                } else {
-                    // Login successful
-                    userManager.getUser()
-                    loggedIn = true
-                }
+        Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
+            if let error = error {
+                print("Error logging in \(error)")
+            } else {
+                // Login successful
+                userManager.getUser()
+                loggedIn = true
             }
         }
+    }
 }
 
 struct SignUpView : View {
@@ -145,6 +142,7 @@ struct SignUpView : View {
                     .padding(.bottom, 20)
                 Button(action: signUp) {
                     Text("SIGN UP")
+                        .font(.custom("Avenir-bold", size: 20))
                 }
                 .buttonStyle(.bordered)
                 .tint(.accentColor)
@@ -190,12 +188,16 @@ struct OrderListView : View {
     
     var body: some View {
         Text("Orderhistorik")
-            .font(.system(size: 20))
+            .font(.custom("Avenir", size: 20))
         List{
             if let user = userManager.user {
                 ForEach (user.orders) { order in
                     NavigationLink(destination: OrderView(userManager: userManager, order: order)){
+                        Text(order.storeName)
+                            .font(.custom("Avenir", size: 12))
+                        Spacer()
                         Text(order.date)
+                            .font(.custom("Avenir", size: 12))
                     }
                 }
             }
@@ -218,8 +220,10 @@ struct OrderView : View {
                 
                     HStack{
                         Text(bouq.name)
+                            .font(.custom("Avenir", size: 12))
                         Spacer()
                         Text("\(bouq.price)")
+                            .font(.custom("Avenir", size: 12))
                     }
             }
         }
@@ -236,7 +240,7 @@ struct ItemView : View {
             Image(systemName: img)
                 .font(.system(size: 20))
             Text(text)
-                .font(.system(size: 20))
+                .font(.custom("Avenir", size: 20))
             Spacer()
         }
         .padding()
