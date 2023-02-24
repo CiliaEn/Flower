@@ -32,7 +32,7 @@ struct FlowerApp: App {
     WindowGroup {
         
       NavigationView {
-        ContentView()
+        SplashScreenView()
       }
     }
   }

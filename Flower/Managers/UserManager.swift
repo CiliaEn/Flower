@@ -11,11 +11,11 @@ import FirebaseFirestore
 
 class UserManager: ObservableObject {
     @Published var user: User?
-
+    
     init(user: User? = nil) {
-            self.user = user
+        self.user = user
     }
-
+    
     func saveUserToFirestore() {
         guard let usern = Auth.auth().currentUser else { return }
         let db = Firestore.firestore()
@@ -32,13 +32,13 @@ class UserManager: ObservableObject {
         guard let user = Auth.auth().currentUser else { return }
         let db = Firestore.firestore()
         let docRef = db.collection("users").document(user.uid)
-
+        
         docRef.addSnapshotListener { (snapshot, error) in
             if let error = error {
                 print(error.localizedDescription)
                 return
             }
-
+            
             guard let snapshot = snapshot, snapshot.exists else { return }
             do {
                 self.user = try snapshot.data(as: User.self)
@@ -48,7 +48,7 @@ class UserManager: ObservableObject {
         }
     }
     func signOut() {
-      try! Auth.auth().signOut()
-      self.user = nil
+        try! Auth.auth().signOut()
+        self.user = nil
     }
 }

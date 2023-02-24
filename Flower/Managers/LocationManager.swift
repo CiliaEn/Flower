@@ -12,19 +12,16 @@ import MapKit
 class LocationManager : NSObject, CLLocationManagerDelegate, ObservableObject {
     
     @Published var location: CLLocationCoordinate2D?
-     
     private let manager = CLLocationManager()
     
-  @Published var region = MKCoordinateRegion()
-    
     override init() {
-           super.init()
-           manager.desiredAccuracy = kCLLocationAccuracyBest
-           manager.distanceFilter = kCLDistanceFilterNone
-           manager.requestWhenInUseAuthorization()
-           manager.startUpdatingLocation()
-           manager.delegate = self
-       }
+        super.init()
+        manager.desiredAccuracy = kCLLocationAccuracyBest
+        manager.distanceFilter = kCLDistanceFilterNone
+        manager.requestWhenInUseAuthorization()
+        manager.startUpdatingLocation()
+        manager.delegate = self
+    }
     
     
     func requestLocationPermission() {
@@ -38,10 +35,6 @@ class LocationManager : NSObject, CLLocationManagerDelegate, ObservableObject {
         manager.startUpdatingLocation()
     }
     
-    func setRegion(store: Store) {
-        region = MKCoordinateRegion(center: store.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
-    }
-    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         location = locations.first?.coordinate
     }
@@ -52,12 +45,10 @@ class LocationManager : NSObject, CLLocationManagerDelegate, ObservableObject {
             
             manager.startUpdatingLocation()
         case .denied, .restricted:
-            // User has denied location permission, handle it as appropriate
             print("User denied location permission")
         default:
             break
         }
     }
-    
 }
 
