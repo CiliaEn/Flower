@@ -31,7 +31,6 @@ struct AccountView: View {
                 NavigationLink(destination: OrderListView(userManager: userManager)){
                     ItemView(img: "list.bullet.clipboard", text: "Beställningar")
                 }
-                
                 ItemView(img: "dollarsign.square", text: "Betalning")
                 ItemView(img: "megaphone", text: "Kampanjer")
                 ItemView(img: "questionmark.circle", text: "Hjälp")
@@ -41,7 +40,7 @@ struct AccountView: View {
                     userManager.signOut()
                     print("sign out succeed")
                 }) { Text("Sign out") }
-                .font(.system(size: 20, weight: .bold))
+                    .font(.system(size: 20, weight: .bold))
             }
         }
         .font(.custom("Avenir", size: 18))
@@ -150,9 +149,9 @@ struct SignUpView : View {
                 .foregroundColor(.blue)
                 .padding()
                 Text("Already have an account, Log in")
-                .onTapGesture {
-                    signIn = true
-                }
+                    .onTapGesture {
+                        signIn = true
+                    }
                 Spacer()
             }
         }
@@ -194,10 +193,10 @@ struct OrderListView : View {
                 ForEach (user.orders) { order in
                     NavigationLink(destination: OrderView(userManager: userManager, order: order)){
                         Text(order.storeName)
-                            .font(.custom("Avenir", size: 12))
+                            .font(.custom("Avenir", size: 16))
                         Spacer()
                         Text(order.date)
-                            .font(.custom("Avenir", size: 12))
+                            .font(.custom("Avenir", size: 16))
                     }
                 }
             }
@@ -218,23 +217,23 @@ struct OrderView : View {
         List {
             ForEach (order.bouquets) { bouq in
                 
-                    HStack{
-                        Text(bouq.name)
-                            .font(.custom("Avenir", size: 12))
-                        Spacer()
-                        Text("\(bouq.price)")
-                            .font(.custom("Avenir", size: 12))
-                    }
+                HStack{
+                    Text(bouq.name)
+                        .font(.custom("Avenir", size: 16))
+                    Spacer()
+                    Text("\(bouq.price)")
+                        .font(.custom("Avenir", size: 16))
+                }
             }
         }
     }
 }
 
 struct ItemView : View {
-
+    
     let img : String
     let text : String
-
+    
     var body: some View {
         HStack{
             Image(systemName: img)

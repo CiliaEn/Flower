@@ -15,13 +15,11 @@ class User : Codable, ObservableObject {
     var orders = [Order]()
     var activeOrder : Order?
     
-    
     init(name: String, phoneNumber: String, email: String, orders: [Order] = [], activeOrder: Order? = nil) {
-            self.name = name
-            self.phoneNumber = phoneNumber
-            self.email = email
-            self.orders = orders
-            self.activeOrder = activeOrder
-        }
-    
+        self.name = name
+        self.phoneNumber = phoneNumber
+        self.email = email
+        self.orders = orders
+        self.activeOrder = activeOrder
+    }
 }

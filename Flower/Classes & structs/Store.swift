@@ -10,7 +10,7 @@ import FirebaseFirestoreSwift
 import CoreLocation
 
 struct Store : Identifiable, Codable, Hashable {
-   
+    
     @DocumentID var id : String?
     
     var name : String
@@ -20,6 +20,7 @@ struct Store : Identifiable, Codable, Hashable {
     var bouquets : [Bouquet]
     var latitude : Double
     var longitude : Double
+    var score : String
     
     var coordinate : CLLocationCoordinate2D {
         CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
@@ -30,7 +31,6 @@ struct Store : Identifiable, Codable, Hashable {
     }
     
     func hash(into hasher: inout Hasher) {
-            hasher.combine(id)
-        }
-   
+        hasher.combine(id)
+    }
 }

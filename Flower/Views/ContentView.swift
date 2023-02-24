@@ -30,83 +30,83 @@ struct ContentView: View {
     
     var body: some View {
         
-            TabView{
-                
-                //Home page
-                NavigationView {
-                        List {
-                            ForEach(searchResults, id: \.self) { store in
-                                NavigationLink(
-                                    destination: StoreView(store: store, userManager: userManager),
-                                    label: {
-                                        RowView(store: store)
-                                    }
-                                )
+        TabView{
+            
+            //Home page
+            NavigationView {
+                List {
+                    ForEach(searchResults, id: \.self) { store in
+                        NavigationLink(
+                            destination: StoreView(store: store, userManager: userManager),
+                            label: {
+                                RowView(store: store)
                             }
-                        }
-                        .frame(width: 420)
-                }
-                .searchable(text: $searchText)
-                .tabItem {
-                    Image(systemName: "house.fill")
-                    Text("Home")
-                }
-                .onAppear(){
-                    firestoreManager.listenToFirestore()
-                    userManager.getUser()
-                }
-                
-                //Search page
-                NavigationStack {
-                    if (searchText != ""){
-                        List {
-                            ForEach(searchResults, id: \.self) { store in
-                                NavigationLink(destination: StoreView(store: store, userManager: userManager)){
-                                    RowView(store: store)
-                                }
-                            }
-                        }
-                    } else {
-                        SearchView(userManager: userManager, firestoreManager: firestoreManager)
+                        )
                     }
                 }
-                .searchable(text: $searchText)
-                .tabItem {
-                    Image(systemName: "magnifyingglass")
-                    Text("Search")
-                }
-                .onAppear(){
-                    firestoreManager.listenToFirestore()
-                }
-                
-                //shopping cart page
-                NavigationStack{
-                    ShoppingCartView(userManager: userManager)
-                }
-                .tabItem {
-                    Image(systemName: "bag.fill")
-                    Text("Cart")
-                }
-                .onAppear(){
-                    userManager.getUser()
-                }
-                
-                //Account page
-                NavigationStack{
-                    if userManager.user != nil {
-                        AccountView(userManager: userManager)
-                    } else {
-                        SignInView(userManager: userManager)
+                .frame(width: 420)
+            }
+            .searchable(text: $searchText)
+            .tabItem {
+                Image(systemName: "house.fill")
+                Text("Home")
+            }
+            .onAppear(){
+                firestoreManager.listenToFirestore()
+                userManager.getUser()
+            }
+            
+            //Search page
+            NavigationStack {
+                if (searchText != ""){
+                    List {
+                        ForEach(searchResults, id: \.self) { store in
+                            NavigationLink(destination: StoreView(store: store, userManager: userManager)){
+                                RowView(store: store)
+                            }
+                        }
                     }
-                }
-                .tabItem {
-                    Image(systemName: "person.fill")
-                    Text("Account")
-                }
-                .onAppear(){
-                    userManager.getUser()
+                } else {
+                    SearchView(userManager: userManager, firestoreManager: firestoreManager)
                 }
             }
+            .searchable(text: $searchText)
+            .tabItem {
+                Image(systemName: "magnifyingglass")
+                Text("Search")
+            }
+            .onAppear(){
+                firestoreManager.listenToFirestore()
+            }
+            
+            //shopping cart page
+            NavigationStack{
+                ShoppingCartView(userManager: userManager)
+            }
+            .tabItem {
+                Image(systemName: "bag.fill")
+                Text("Cart")
+            }
+            .onAppear(){
+                userManager.getUser()
+            }
+            
+            //Account page
+            NavigationStack{
+                if userManager.user != nil {
+                    AccountView(userManager: userManager)
+                } else {
+                    SignInView(userManager: userManager)
+                }
+            }
+            .tabItem {
+                Image(systemName: "person.fill")
+                Text("Account")
+            }
+            .onAppear(){
+                userManager.getUser()
+            }
+        }
     }
     
 }
@@ -131,7 +131,7 @@ struct RowView: View {
                         Circle()
                             .fill(Color(red: 0.86, green: 0.64, blue: 1.13))
                             .frame(width: 27, height: 27)
-                        Text("4.2")
+                        Text(store.score)
                             .font(.custom("Avenir", size: 12))
                             .foregroundColor(Color(red: 0.36, green: 0.14, blue: 0.63))
                     }

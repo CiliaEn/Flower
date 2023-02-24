@@ -9,13 +9,13 @@ import Foundation
 import SwiftUI
 
 struct ShoppingCartView: View {
-
+    
     @ObservedObject var userManager : UserManager
     
     var body: some View {
         VStack{
             Text("Shopping Cart")
-                            .font(.title)
+                .font(.title)
             
             if let user = userManager.user {
                 if let order = user.activeOrder {
@@ -23,12 +23,11 @@ struct ShoppingCartView: View {
                     List {
                         ForEach(order.bouquets) { bouquet in
                             HStack {
-                                    Text("x 1")
+                                Text("x 1")
                                 
-                                    Text(bouquet.name)
+                                Text(bouquet.name)
                                 Spacer()
-                                    Text("\(bouquet.price)kr")
-                                
+                                Text("\(bouquet.price)kr")
                             }
                         }
                     }

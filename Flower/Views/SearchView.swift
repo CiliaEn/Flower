@@ -21,12 +21,12 @@ struct SearchView: View {
             .padding(.bottom, 1)
             HStack{
                 FastSearchView(colour: "fast", img: "box.truck.badge.clock", text: "Snabb leverans")
-               
+                
                 FastSearchView(colour: "best", img: "medal", text: "Bäst omdömen")
             }
             HStack{
                 Text("Mina beställningar")
-                    .font(.custom("Avenir", size: 20))
+                    .font(.custom("Avenir-bold", size: 20))
                     .padding(.leading, 16)
                 Spacer()
             }
@@ -41,8 +41,9 @@ struct SearchView: View {
                                     label: {
                                         Image(store.image)
                                             .resizable()
+                                            .frame(width: 36, height: 36)
                                         Text(store.name)
-                                            .font(.custom("Avenir", size: 16))
+                                            .font(.custom("Avenir", size: 17))
                                     }
                                 )
                             }

@@ -11,6 +11,7 @@ struct StoreView: View {
     
     let store: Store
     @ObservedObject var userManager: UserManager
+    @State private var itemAddedToCart = false
     
     var body: some View {
         VStack {
@@ -34,23 +35,24 @@ struct StoreView: View {
                 }
                 .padding(.leading, 20)
                 Spacer()
-                
-                
-
             }
             List(store.bouquets) { bouq in
-                BouquetView(userManager: userManager, bouq: bouq, store: store)
+                BouquetView(userManager: userManager, itemAddedToCart: $itemAddedToCart, bouq: bouq, store: store)
             }
         }
         .font(.custom("Avenir", size: 16))
+        .overlay(
+            NotificationView(text: "Added to cart!", show: $itemAddedToCart)
+            
+        )
     }
 }
 
 struct BouquetView: View {
-
     @ObservedObject var userManager: UserManager
     @State private var showErrorAlert = false
-  
+    @Binding var itemAddedToCart: Bool
+    
     let bouq: Bouquet
     let store: Store
     
@@ -68,19 +70,24 @@ struct BouquetView: View {
                     .resizable()
                     .frame(width: 80, height: 80)
                 Button(action: {
-                    
                     if let user = userManager.user {
                         if let order = user.activeOrder {
                             order.addBouquet(bouq)
                             print("adding bouq to existing order")
                         } else {
-                            //create new order and add bouquet and add order to user
                             let newOrder = Order(storeName: store.name, bouquets: [], date: "")
                             newOrder.addBouquet(bouq)
                             user.activeOrder = newOrder
                             print("creating new order")
                         }
                         userManager.saveUserToFirestore()
+                        
+                        self.itemAddedToCart = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            withAnimation {
+                                self.itemAddedToCart = false
+                            }
+                        }
                     } else {
                         self.showErrorAlert = true
                     }
@@ -91,6 +98,29 @@ struct BouquetView: View {
                     Alert(title: Text("Could not add to cart"), message: Text("You have to log in to buy flowers."), dismissButton: .default(Text("OK")))
                 }
             }
+        }
+        
+    }
+}
+
+struct NotificationView: View {
+    let text: String
+    @Binding var show: Bool
+    
+    var body: some View {
+        VStack {
+            Spacer()
+            if show {
+                Text(text)
+                    .font(.custom("Avenir", size: 16))
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 20)
+                    .background(Color(red: 0.86, green: 0.64, blue: 1.13))
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+                    .transition(.opacity)
+            }
+            
         }
     }
 }

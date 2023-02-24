@@ -38,10 +38,9 @@ class FirestoreManager : ObservableObject {
         }
     }
     
-    
-    func saveToFirestore (_ storeName : String, _ fee: Int, _ time : String, _ img: String, _ bouquets: [Bouquet], _ latitude : Double, _ longitude : Double) {
+    func saveToFirestore (_ storeName : String, _ fee: Int, _ time : String, _ img: String, _ bouquets: [Bouquet], _ latitude : Double, _ longitude : Double, _ score : String) {
         let db = Firestore.firestore()
-        let store = Store(name: storeName, deliveryFee: fee, deliveryTime: time, image: img, bouquets: bouquets, latitude: latitude, longitude: longitude)
+        let store = Store(name: storeName, deliveryFee: fee, deliveryTime: time, image: img, bouquets: bouquets, latitude: latitude, longitude: longitude, score: score)
         
         do {
             _ = try db.collection("stores").addDocument(from: store)

@@ -14,16 +14,13 @@ class Order : Codable, Identifiable {
     var bouquets : [Bouquet]
     var date : String
     
-    
     init(storeName: String, bouquets: [Bouquet] = [], date: String = "") {
         self.storeName = storeName
         self.bouquets = bouquets
         self.date = date
     }
-
-        
+    
     func addBouquet(_ bouq : Bouquet) {
         bouquets.append(bouq)
     }
-    
 }

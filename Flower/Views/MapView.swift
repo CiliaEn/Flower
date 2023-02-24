@@ -18,7 +18,6 @@ struct MapView : View {
     @State var region = MKCoordinateRegion()
     @State private var userTrackingMode = MapUserTrackingMode.none
     
-    
     var body : some View {
         VStack{
             
@@ -38,7 +37,6 @@ struct MapView : View {
             firestoreManager.listenToFirestore()
             setRegion(store: store)
             locationManager.requestLocationPermission()
-            
         }
         .overlay(
             Button(action: {
@@ -77,7 +75,6 @@ struct MapPinView: View {
                 .font(.caption)
                 .foregroundColor(.red)
                 .offset(x: 0, y: -5)
-            
         }
     }
 }
